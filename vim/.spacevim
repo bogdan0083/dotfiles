@@ -1,0 +1,215 @@
+" You can enable the existing layers in space-vim and
+
+" exclude the partial plugins in a certain layer.
+" The command Layer is vaild in the function Layers().  Use exclude option if you don't want the full Layer,
+" e.g., Layer 'better-defaults', { 'exclude': 'itchyny/vim-cursorword' }
+function! Layers()
+
+  " Default layers, recommended!
+  Layer 'fzf'
+  Layer 'unite'
+  Layer 'airline'
+  Layer 'better-defaults'
+  Layer 'better-motion'
+  Layer 'auto-completion'
+  Layer 'code-snippets'
+  Layer 'syntax-checking'
+  Layer 'file-manager'
+  Layer 'javascript'
+  Layer 'html'
+  Layer 'editing'
+  Layer 'git'                                             
+  Layer 'github'                                          
+  Layer 'ycmd'                                          
+
+endfunction                                               
+
+" Put your private plugins here.                          
+function! UserInit()                                      
+
+  " Space has been set as the default leader key,
+  " if you want to change it, uncomment and set it here.
+  let g:spacevim_leader = "s"
+  let g:spacevim_localleader = ' '
+  " Install private plugins
+
+  Plug 'rhysd/clever-f.vim'
+  Plug 'tpope/vim-unimpaired'
+  Plug 'tpope/vim-repeat'
+  Plug 'Chiel92/vim-autoformat'
+  Plug 'flazz/vim-colorschemes'
+  Plug 'xolox/vim-misc'
+  Plug 'xolox/vim-session'
+  Plug 'mattn/emmet-vim'
+  Plug 'digitaltoad/vim-jade'
+  Plug 'yggdroot/indentline'
+  Plug 'kana/vim-textobj-user'
+  Plug 'kana/vim-textobj-entire'
+  Plug 'kana/vim-textobj-fold'
+  Plug 'thinca/vim-textobj-between'
+  Plug 'beloglazov/vim-textobj-quotes'
+  Plug 'whatyouhide/vim-textobj-xmlattr'
+  Plug 'jasonlong/vim-textobj-css'
+  Plug 'jceb/vim-orgmode'
+
+  " Ranger.vim
+  Plug 'rbgrouleff/bclose.vim'
+  Plug 'francoiscabrol/ranger.vim'
+
+  " vim-yankstack
+  Plug 'maxbrunsfeld/vim-yankstack'
+
+endfunction
+
+" Put your custom configurations here, e.g., change the colorscheme.
+function! UserConfig()
+  " Set modifiable to on
+  set modifiable
+  set iskeyword+=\-
+
+  noremap <M-j> :NERDTreeToggle<CR>
+
+  " Map leader for Ы key (for russian keyboard)
+  nnoremap ы s
+  
+  set iskeyword+=\-
+
+  " Apperance settings
+  color jellybeans
+  let g:airline_theme= 'jellybeans'
+
+  " Indentation settings
+  set expandtab
+  set shiftwidth=2
+  set softtabstop=2
+  set autoindent
+  set smartindent
+  set imsearch
+
+  " Some custom mappings
+
+  " Edit spacevim dotfile
+  nnoremap <Leader>ev :e ~/.spacevim<CR>
+
+  " Kill buffer without closing split window
+  nnoremap <Leader>bd :bp\|bd! #<CR>
+
+  " NERDTree
+  nnoremap <leader>0 :NERDTreeFocus<cr>
+  nnoremap <leader>nt :NERDTreeToggle<CR>
+  nnoremap <Leader>nf :NERDTreeFind<CR>
+  nnoremap <Leader>nf :NERDTreeFind<CR>
+
+  " Ranger
+  let g:ranger_map_keys = 0
+  nnoremap <Leader>arr :Ranger<CR>
+
+  " Choosewin
+  nmap zz <Plug>(choosewin)
+  let g:choosewin_overlay_enable = 1
+  let g:choosewin_keymap = {}
+  let g:choosewin_keymap.x = 'previous'
+
+  " Vim session
+  let g:session_autoload = 'yes'
+  let g:session_autosave = 'yes'
+
+  " session mapping
+  nnoremap <Leader>ss :SaveSession!<CR>
+  nnoremap <Leader>sl :OpenSession<CR>
+  nnoremap <Leader>sn :SaveSession
+  nnoremap <Leader>sc :SClose<CR>
+
+  " Restart Vim
+  nnoremap <Leader>sr :RestartVim<CR>
+
+  " Set session dir for startify
+  let g:startify_session_dir = '~/.vim/sessions'
+  let g:startify_list_order = ['sessions', 'files', 'bookmarks', 'dir']
+
+  " FZF settings and mappings
+  nnoremap <Leader>pa :Ag<CR>
+  nnoremap <Leader>pf :Files<CR>
+  nnoremap <Leader>ph :History<CR>
+  nnoremap <Leader>pt :Tags<CR>
+
+  " Terminal emulator mappings
+  tnoremap <C-d> <C-\><C-n>
+  
+  " Terminal mappings
+  nnoremap <Leader>tt :sp <bar> resize 10 <bar> term<CR>
+
+  " Deoplete 
+  let g:deoplete#auto_complete_start_length = 1
+  let g:deoplete#buffer#require_same_filetype = 0
+
+  " Autoformat buffer
+  nnoremap <Leader>bf :Autoformat<CR>
+
+  " Quit vim mappings
+  nnoremap <Leader>qq :wq<CR>
+  nnoremap <Leader>qQ :q!<CR>
+  nnoremap <Leader>qa :wqa<CR>
+  nnoremap <Leader>qr :source ~/.spacevim <bar> :AirlineRefresh<CR>
+
+  set timeout ttimeoutlen=50
+
+  " Emmet leader key
+  let g:user_emmet_leader_key='<C-Z>'
+
+  " Expand emmet abbreviation
+  imap jf <Plug>(emmet-expand-abbr)
+
+  " Easymotion
+  let g:EasyMotion_use_smartcase = 1
+  nmap <Leader>j <Plug>(easymotion-overwin-f)
+
+  " Indentline
+  let g:indentLine_enabled = 0
+
+  " Toggle indent lines
+  nnoremap <Leader>ti :IndentLinesToggle<CR>
+
+  " Fix for cyrillic keyboard keys
+  set keymap=russian-jcukenwin  
+  set iminsert=0  
+  set imsearch=0  
+  highlight lCursor guifg=NONE guibg=Cyan  
+
+  set langmap=ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕHГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\"ZXCVBNM<>
+
+  " Resize window mappings
+  map <M-+> :resize +5<CR>
+  map <M--> :resize -5<CR>
+
+  " Make dw behave as daw
+  nnoremap dw daw
+
+  " Vim swoop
+  let g:swoopUseDefaultKeyMap = 1 
+
+  " text-object-any-pair
+  " quite ugly, i know...
+  call textobj#user#plugin('anypair', {
+        \ 'any-pair-around': {
+        \   'pattern': '\v[''"\<\{\(\[](([^'']|''\w)+)[''"\>\}\)\]]',
+        \   'select': ['a;'],
+        \ },
+        \ 'any-pair-inner': {
+        \   'pattern': '\v[''"\<\{\(\[]\zs(([^'']|''\w)+\ze)[''"\>\}\)\]]',
+        \   'select': ['i;'],
+        \ },
+        \ })
+
+  " vim-yankstack
+  nnoremap <M-p> <Plug>yankstack_substitute_newer_paste
+augroup netrw_mapping
+    autocmd!
+    autocmd filetype netrw call NetrwMapping()
+augroup END
+
+function! NetrwMapping()
+    noremap <buffer> s <Leader>
+endfunction
+
+endfunction
