@@ -9,7 +9,7 @@ function! Layers()
   Layer 'fzf'
   Layer 'unite'
   Layer 'airline'
-  Layer 'better-defaults'
+  Layer 'better-defaults', { 'exclude': 't9md/choosewin' }
   Layer 'better-motion'
   Layer 'auto-completion'
   Layer 'code-snippets'
@@ -18,14 +18,14 @@ function! Layers()
   Layer 'javascript'
   Layer 'html'
   Layer 'editing'
-  Layer 'git'                                             
-  Layer 'github'                                          
-  Layer 'ycmd'                                          
+  Layer 'git'
+  Layer 'github'
+  Layer 'ycmd'
 
-endfunction                                               
+endfunction
 
-" Put your private plugins here.                          
-function! UserInit()                                      
+" Put your private plugins here.
+function! UserInit()
 
   " Space has been set as the default leader key,
   " if you want to change it, uncomment and set it here.
@@ -58,6 +58,11 @@ function! UserInit()
 
   " vim-yankstack
   Plug 'maxbrunsfeld/vim-yankstack'
+  Plug 'maxbrunsfeld/vim-yankstack'
+  Plug 'prettier/vim-prettier'
+
+  " vim-exchange
+  Plug 'tommcdo/vim-exchange'
 
 endfunction
 
@@ -67,15 +72,13 @@ function! UserConfig()
   set modifiable
   set iskeyword+=\-
 
-  noremap <M-j> :NERDTreeToggle<CR>
-
   " Map leader for Ы key (for russian keyboard)
   nnoremap ы s
-  
+
   set iskeyword+=\-
 
   " Apperance settings
-  color jellybeans
+
   let g:airline_theme= 'jellybeans'
 
   " Indentation settings
@@ -88,6 +91,10 @@ function! UserConfig()
 
   " Some custom mappings
 
+  " Alisases to ]<Space> and [<Space>
+  nmap <Leader>[ [<Space>
+  nmap <Leader>] ]<Space>
+
   " Edit spacevim dotfile
   nnoremap <Leader>ev :e ~/.spacevim<CR>
 
@@ -96,19 +103,12 @@ function! UserConfig()
 
   " NERDTree
   nnoremap <leader>0 :NERDTreeFocus<cr>
-  nnoremap <leader>nt :NERDTreeToggle<CR>
-  nnoremap <Leader>nf :NERDTreeFind<CR>
-  nnoremap <Leader>nf :NERDTreeFind<CR>
+  nnoremap <leader>tt :NERDTreeToggle<CR>
+  nnoremap <Leader>tf :NERDTreeFind<CR>
 
   " Ranger
   let g:ranger_map_keys = 0
   nnoremap <Leader>arr :Ranger<CR>
-
-  " Choosewin
-  nmap zz <Plug>(choosewin)
-  let g:choosewin_overlay_enable = 1
-  let g:choosewin_keymap = {}
-  let g:choosewin_keymap.x = 'previous'
 
   " Vim session
   let g:session_autoload = 'yes'
@@ -129,17 +129,17 @@ function! UserConfig()
 
   " FZF settings and mappings
   nnoremap <Leader>pa :Ag<CR>
-  nnoremap <Leader>pf :Files<CR>
+  nnoremap <Leader>pf :GFiles<CR>
   nnoremap <Leader>ph :History<CR>
   nnoremap <Leader>pt :Tags<CR>
 
   " Terminal emulator mappings
-  tnoremap <C-d> <C-\><C-n>
-  
-  " Terminal mappings
-  nnoremap <Leader>tt :sp <bar> resize 10 <bar> term<CR>
+  tnoremap <Esc> <C-\><C-n>
 
-  " Deoplete 
+  " Terminal mappings
+  nnoremap <Leader>tT :sp <bar> resize 10 <bar> term<CR>
+
+  " Deoplete
   let g:deoplete#auto_complete_start_length = 1
   let g:deoplete#buffer#require_same_filetype = 0
 
@@ -162,7 +162,8 @@ function! UserConfig()
 
   " Easymotion
   let g:EasyMotion_use_smartcase = 1
-  nmap <Leader>j <Plug>(easymotion-overwin-f)
+
+  nmap <Leader>j <Plug>(easymotion-prefix)
 
   " Indentline
   let g:indentLine_enabled = 0
@@ -171,10 +172,10 @@ function! UserConfig()
   nnoremap <Leader>ti :IndentLinesToggle<CR>
 
   " Fix for cyrillic keyboard keys
-  set keymap=russian-jcukenwin  
-  set iminsert=0  
-  set imsearch=0  
-  highlight lCursor guifg=NONE guibg=Cyan  
+  set keymap=russian-jcukenwin
+  set iminsert=0
+  set imsearch=0
+  highlight lCursor guifg=NONE guibg=Cyan
 
   set langmap=ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕHГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\"ZXCVBNM<>
 
@@ -185,9 +186,13 @@ function! UserConfig()
   " Make dw behave as daw
   nnoremap dw daw
 
+  " clipboard easy yank & paste
+  nnoremap <Leader>ay "+y
+  nnoremap <Leader>ap "+p
   " Vim swoop
-  let g:swoopUseDefaultKeyMap = 1 
+  let g:swoopUseDefaultKeyMap = 1
 
+  " Yank and copy from clipboard
   " text-object-any-pair
   " quite ugly, i know...
   call textobj#user#plugin('anypair', {
@@ -203,13 +208,13 @@ function! UserConfig()
 
   " vim-yankstack
   nnoremap <M-p> <Plug>yankstack_substitute_newer_paste
-augroup netrw_mapping
+  augroup netrw_mapping
     autocmd!
     autocmd filetype netrw call NetrwMapping()
-augroup END
+  augroup END
 
-function! NetrwMapping()
+  function! NetrwMapping()
     noremap <buffer> s <Leader>
-endfunction
+  endfunction
 
 endfunction
