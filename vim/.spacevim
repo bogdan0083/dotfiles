@@ -1,3 +1,4 @@
+
 " You can enable the existing layers in space-vim and
 
 " exclude the partial plugins in a certain layer.
@@ -9,7 +10,7 @@ function! Layers()
   Layer 'fzf'
   Layer 'unite'
   Layer 'airline'
-  Layer 'better-defaults', { 'exclude': 't9md/choosewin' }
+  Layer 'better-defaults', { 'exclude': ['t9md/choosewin'] }
   Layer 'better-motion'
   Layer 'auto-completion'
   Layer 'code-snippets'
@@ -17,20 +18,23 @@ function! Layers()
   Layer 'file-manager'
   Layer 'javascript'
   Layer 'html'
-  Layer 'editing'
+  Layer 'editing', {'exclude': 'scrooloose/nerdcommenter'}
   Layer 'git'
   Layer 'github'
+  Layer 'ruby'
   Layer 'ycmd'
+  Layer 'text-align'
 
 endfunction
 
-" Put your private plugins here.
 function! UserInit()
 
   " Space has been set as the default leader key,
   " if you want to change it, uncomment and set it here.
   let g:spacevim_leader = "s"
-  let g:spacevim_localleader = ' '
+  let mapleader = "s"
+
+  " let g:spacevim_localleader = ' '
   " Install private plugins
 
   Plug 'rhysd/clever-f.vim'
@@ -46,11 +50,16 @@ function! UserInit()
   Plug 'kana/vim-textobj-user'
   Plug 'kana/vim-textobj-entire'
   Plug 'kana/vim-textobj-fold'
-  Plug 'thinca/vim-textobj-between'
   Plug 'beloglazov/vim-textobj-quotes'
-  Plug 'whatyouhide/vim-textobj-xmlattr'
-  Plug 'jasonlong/vim-textobj-css'
+  Plug 'rhysd/vim-textobj-anyblock'
   Plug 'jceb/vim-orgmode'
+  Plug 'othree/yajs'
+  Plug 'tomtom/tcomment_vim'
+  Plug 'prettier/vim-prettier'
+  Plug 'christoomey/vim-tmux-navigator'
+  Plug 'wellle/targets.vim'
+  Plug 'dyng/ctrlsf.vim'
+  Plug 'sickill/vim-monokai'
 
   " Ranger.vim
   Plug 'rbgrouleff/bclose.vim'
@@ -58,19 +67,31 @@ function! UserInit()
 
   " vim-yankstack
   Plug 'maxbrunsfeld/vim-yankstack'
-  Plug 'maxbrunsfeld/vim-yankstack'
-  Plug 'prettier/vim-prettier'
 
   " vim-exchange
   Plug 'tommcdo/vim-exchange'
 
+  " OceanicNext colorscheme
+  Plug 'mhartington/oceanic-next'
+
+  " Slim
+  Plug 'slim-template/vim-slim', { 'for': 'slim' }
+
 endfunction
 
-" Put your custom configurations here, e.g., change the colorscheme.
+" put your custom configurations here, e.g., change the colorscheme.
 function! UserConfig()
+
   " Set modifiable to on
   set modifiable
   set iskeyword+=\-
+  set mouse=a
+
+  " Settings for russian language
+  set keymap=russian-jcukenwin
+  set iminsert=0
+  set imsearch=0
+  highlight lCursor guifg=NONE guibg=Cyan
 
   " Map leader for Ы key (for russian keyboard)
   nnoremap ы s
@@ -78,8 +99,12 @@ function! UserConfig()
   set iskeyword+=\-
 
   " Apperance settings
+  let g:airline_theme= 'oceanicnext'
+  let g:airline_powerline_fonts = 1
+  set encoding=utf-8
 
-  let g:airline_theme= 'jellybeans'
+  " required if using https://github.com/bling/vim-airline
+  let g:airline_powerline_fonts=1
 
   " Indentation settings
   set expandtab
@@ -88,12 +113,33 @@ function! UserConfig()
   set autoindent
   set smartindent
   set imsearch
+  set foldmethod=syntax
+
+  " Theme
+  syntax enable
+  colorscheme monokai
+  highlight Normal ctermbg=NONE
+  highlight nonText ctermbg=NONE
+
+  " Or if you have Neovim >= 0.1.5
+  if (has("termguicolors"))
+   set termguicolors
+  endif
 
   " Some custom mappings
+
+  " Quick way to some text-objects
+  xmap q iq
+  omap q iq
+  xmap b ib
+  omap b ib
 
   " Alisases to ]<Space> and [<Space>
   nmap <Leader>[ [<Space>
   nmap <Leader>] ]<Space>
+
+  " Remove highlighting
+  nnoremap <Leader>n :nohl<CR>
 
   " Edit spacevim dotfile
   nnoremap <Leader>ev :e ~/.spacevim<CR>
@@ -106,12 +152,14 @@ function! UserConfig()
   nnoremap <leader>tt :NERDTreeToggle<CR>
   nnoremap <Leader>tf :NERDTreeFind<CR>
 
+  " Javascript language vim settings
+  let g:javascript_plugin_jsdoc = 1
+
   " Ranger
   let g:ranger_map_keys = 0
   nnoremap <Leader>arr :Ranger<CR>
 
   " Vim session
-  let g:session_autoload = 'yes'
   let g:session_autosave = 'yes'
 
   " session mapping
@@ -130,6 +178,8 @@ function! UserConfig()
   " FZF settings and mappings
   nnoremap <Leader>pa :Ag<CR>
   nnoremap <Leader>pf :GFiles<CR>
+  nnoremap <Space> :GFiles<CR>
+  nnoremap <C-Space> :Buffers<CR>
   nnoremap <Leader>ph :History<CR>
   nnoremap <Leader>pt :Tags<CR>
 
@@ -138,10 +188,6 @@ function! UserConfig()
 
   " Terminal mappings
   nnoremap <Leader>tT :sp <bar> resize 10 <bar> term<CR>
-
-  " Deoplete
-  let g:deoplete#auto_complete_start_length = 1
-  let g:deoplete#buffer#require_same_filetype = 0
 
   " Autoformat buffer
   nnoremap <Leader>bf :Autoformat<CR>
@@ -153,9 +199,6 @@ function! UserConfig()
   nnoremap <Leader>qr :source ~/.spacevim <bar> :AirlineRefresh<CR>
 
   set timeout ttimeoutlen=50
-
-  " Emmet leader key
-  let g:user_emmet_leader_key='<C-Z>'
 
   " Expand emmet abbreviation
   imap jf <Plug>(emmet-expand-abbr)
@@ -171,40 +214,25 @@ function! UserConfig()
   " Toggle indent lines
   nnoremap <Leader>ti :IndentLinesToggle<CR>
 
-  " Fix for cyrillic keyboard keys
-  set keymap=russian-jcukenwin
-  set iminsert=0
-  set imsearch=0
-  highlight lCursor guifg=NONE guibg=Cyan
-
-  set langmap=ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕHГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\"ZXCVBNM<>
-
   " Resize window mappings
-  map <M-+> :resize +5<CR>
-  map <M--> :resize -5<CR>
-
-  " Make dw behave as daw
-  nnoremap dw daw
+  map <M-]> :resize +5<CR>
+  map <M-[> :resize -5<CR>
+  map <C-]> :vertical resize +5<CR>
+  map <C-[> :vertical resize -5<CR>
 
   " clipboard easy yank & paste
   nnoremap <Leader>ay "+y
-  nnoremap <Leader>ap "+p
+  nnoremap <Leader>ap "+1
+
+  " Vim metarepeat
+  nmap m <Plug>(metarepeat-preset-occurence)
+  vmap go <Plug>(metarepeat-preset-occurence)
+
   " Vim swoop
   let g:swoopUseDefaultKeyMap = 1
 
-  " Yank and copy from clipboard
-  " text-object-any-pair
-  " quite ugly, i know...
-  call textobj#user#plugin('anypair', {
-        \ 'any-pair-around': {
-        \   'pattern': '\v[''"\<\{\(\[](([^'']|''\w)+)[''"\>\}\)\]]',
-        \   'select': ['a;'],
-        \ },
-        \ 'any-pair-inner': {
-        \   'pattern': '\v[''"\<\{\(\[]\zs(([^'']|''\w)+\ze)[''"\>\}\)\]]',
-        \   'select': ['i;'],
-        \ },
-        \ })
+  " YouCompleteMe
+  let g:ycm_min_num_of_chars_for_completion = 1
 
   " vim-yankstack
   nnoremap <M-p> <Plug>yankstack_substitute_newer_paste
@@ -213,8 +241,22 @@ function! UserConfig()
     autocmd filetype netrw call NetrwMapping()
   augroup END
 
-  function! NetrwMapping()
-    noremap <buffer> s <Leader>
+  " Multiple cursors mappings
+  let g:multi_cursor_next_key = '<C-n>'
+  let g:multi_cursor_prev_key = '<C-p>'
+  let g:multi_cursor_skip_key = '<C-x>'
+  let g:multi_cursor_quit_key = '<Esc>'
+
+  " CtrlSF settings
+  " let g:ctrlsf_default_root = 'project'
+  let g:ctrlsf_position = 'bottom'
+
+  " Run marcos over selected lines
+  xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+  function! ExecuteMacroOverVisualRange()
+    echo "@".getcmdline()
+    execute ":'<,'>normal @".nr2char(getchar())
   endfunction
+  "
 
 endfunction
