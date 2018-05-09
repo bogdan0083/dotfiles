@@ -12,19 +12,15 @@ function! Layers()
   Layer 'airline'
   Layer 'better-defaults', { 'exclude': 't9md/choosewin' }
   Layer 'better-motion'
-  Layer 'auto-completion'
   Layer 'code-snippets'
   Layer 'syntax-checking'
   Layer 'file-manager'
-  Layer 'programming'
   Layer 'javascript'
   Layer 'html'
   Layer 'editing', {'exclude': 'scrooloose/nerdcommenter'}
   Layer 'git'
   Layer 'github'
   Layer 'ruby'
-  Layer 'ycmd'
-  Layer 'deoplete'
   Layer 'text-align'
 
 endfunction
@@ -33,20 +29,29 @@ function! UserInit()
 
   " Space has been set as the default leader key,
   " if you want to change it, uncomment and set it here.
-  let g:spacevim_leader = "s"
-  let mapleader = "s"
+  let g:mapleader = "s"
 
   " let g:spacevim_localleader = ' '
   " Install private plugins
 
+  " Completion
+  Plug 'roxma/nvim-completion-manager'
+  Plug 'roxma/ncm-rct-complete'
+  Plug 'fgrsnau/ncm-otherbuf'
+  " Plug 'autozimu/LanguageClient-neovim', {
+  "   \ 'branch': 'next',
+  "   \ 'do': ':UpdateRemotePlugins',
+  "   \ }
+  " Plug 'sourcegraph/javascript-typescript-langserver', {}
+  " Other stuff
+  Plug 'flazz/vim-colorschemes'
   Plug 'rhysd/clever-f.vim'
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-repeat'
   Plug 'Chiel92/vim-autoformat'
-  " Plug 'flazz/vim-colorschemes'
   Plug 'xolox/vim-misc'
   Plug 'xolox/vim-session'
-  Plug 'mattn/emmet-vim'
+  Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'scss', 'sass'] }
   Plug 'digitaltoad/vim-jade', { 'for': 'jade' }
   Plug 'kana/vim-textobj-user'
   Plug 'kana/vim-textobj-entire'
@@ -55,16 +60,13 @@ function! UserInit()
   Plug 'rhysd/vim-textobj-anyblock'
   Plug 'othree/yajs'
   Plug 'tomtom/tcomment_vim'
-  Plug 'prettier/vim-prettier', { 'for': ['javascript', 'html'] }
+  " Plug 'prettier/vim-prettier', { 'for': ['javascript', 'html'] }
   Plug 'wellle/targets.vim'
   Plug 'dyng/ctrlsf.vim'
   Plug 'janko-m/vim-test'
   Plug 'tpope/vim-rails'
   Plug 'lifepillar/vim-solarized8'
-
-  " Ranger.vim
-  Plug 'rbgrouleff/bclose.vim'
-  Plug 'francoiscabrol/ranger.vim'
+  Plug 'AndrewRadev/splitjoin.vim'
 
   " vim-yankstack
   Plug 'maxbrunsfeld/vim-yankstack'
@@ -78,6 +80,11 @@ function! UserInit()
   " Slim
   Plug 'slim-template/vim-slim', { 'for': 'slim' }
 
+  " Specify linters for ALE
+  let g:spacevim#plug#ale#linters = {
+    \ 'javascript': ['eslint', 'flow'],
+    \ }
+
 endfunction
 
 " put your custom configurations here, e.g., change the colorscheme.
@@ -87,22 +94,20 @@ function! UserConfig()
   set modifiable
   set iskeyword+=\-
   set mouse=a
-  set complete=.,w,b,u,t,i
 
   " Settings for russian language
   set keymap=russian-jcukenwin
   set iminsert=0
   set imsearch=0
   highlight lCursor guifg=NONE guibg=Cyan
-
-  " Map leader for Ы key (for russian keyboard)
-  nnoremap ы s
+  imap <M-j> <C-^>
 
   set iskeyword+=\-
 
   " Apperance settings
-  let g:airline_theme= 'base16'
+  let g:airline_theme='base16'
   let g:airline_powerline_fonts = 1
+  let g:airline#extensions#keymap#enabled = 0
   set encoding=utf-8
 
   " required if using https://github.com/bling/vim-airline
@@ -118,7 +123,6 @@ function! UserConfig()
   set foldmethod=syntax
 
   " Theme
-
   " Or if you have Neovim >= 0.1.5
   set termguicolors
 
@@ -139,8 +143,12 @@ function! UserConfig()
   nmap <Leader>[ [<Space>
   nmap <Leader>] ]<Space>
 
+  " Tab keymaps
+  nmap ]t :tabn<CR>
+  nmap [t :tabp<CR>
+
   " Remove highlighting
-  nnoremap <Leader>n :nohl<CR>
+  nnoremap <Leader>N :nohl<CR>
 
   " Edit spacevim dotfile
   nnoremap <Leader>ev :e ~/.spacevim<CR>
@@ -151,7 +159,7 @@ function! UserConfig()
   " NERDTree
   nnoremap <leader>0 :NERDTreeFocus<cr>
   nnoremap <leader>tt :NERDTreeToggle<CR>
-  nnoremap <Leader>tf :NERDTreeFind<CR>
+  nnoremap <Leader>tT :NERDTreeFind<CR>
 
   " Javascript language vim settings
   let g:javascript_plugin_jsdoc = 1
@@ -167,6 +175,7 @@ function! UserConfig()
   nnoremap <Leader>ss :SaveSession!<CR>
   nnoremap <Leader>sl :OpenSession<CR>
   nnoremap <Leader>sn :SaveSession
+
   nnoremap <Leader>sc :SClose<CR>
 
   " Restart Vim
@@ -177,6 +186,7 @@ function! UserConfig()
   let g:startify_list_order = ['sessions', 'files', 'bookmarks', 'dir']
 
   " FZF settings and mappings
+  command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
   nnoremap <Leader>pa :Ag<CR>
   nnoremap <Leader>pf :GFiles<CR>
   nnoremap <Space> :Buffers<CR>
@@ -184,11 +194,10 @@ function! UserConfig()
   nnoremap <Leader>ph :History<CR>
   nnoremap <Leader>pt :Tags<CR>
 
+  " ALE syntax-check settings
+
   " Terminal emulator mappings
   tnoremap <Esc> <C-\><C-n>
-
-  " Terminal mappings
-  nnoremap <Leader>tT :sp <bar> resize 10 <bar> term<CR>
 
   " Autoformat buffer
   nnoremap <Leader>bf :Autoformat<CR>
@@ -222,7 +231,7 @@ function! UserConfig()
   map <M-0> :vertical resize -5<CR>
 
   " Go to tag definition
-  nnoremap gd <C-]>
+  " nnoremap gd <C-]>
   " Go back on tag stack
   nnoremap gt <C-t>
   " clipboard easy yank & paste
@@ -268,6 +277,48 @@ function! UserConfig()
   nmap <silent><Leader>tl :TestLast<CR>
   nmap <silent><Leader>tg :TestVisit<CR>
 
+  " nvim-completion-manager
+  "
+  let g:cm_matcher = {'module': 'cm_matchers.fuzzy_matcher', 'case': 'smartcase'}
+  let g:cm_refresh_length = [[1,2],[7,3]]
+  let g:cm_sources_override = {
+        \ 'cm-filepath': {'priority': 4},
+        \ 'cm-tags': {'enable':0}
+        \ }
+
+  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+  imap <expr> <S-CR>  (pumvisible() ?  "\<c-y>\<Plug>(expand_or_nl)" : "\<CR>")
+  imap <expr> <Plug>(expand_or_nl) (cm#completed_is_snippet() ? "\<C-U>":"\<CR>")
+  inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+
+  " Required for operations modifying multiple buffers like rename.
+  set hidden
+
+  let g:LanguageClient_serverCommands = {
+    \ 'javascript': ['node', expand('~/.local/share/nvim/plugged/javascript-typescript-langserver/lib/language-server-stdio.js')],
+    \ 'javascript.jsx': ['node', expand('~/.local/share/nvim/plugged/javascript-typescript-langserver/lib/language-server-stdio.js')],
+    \ }
+
+  nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+  nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+  nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+
+  " Full-text search mappings
+  nmap     <Leader>nn <Plug>CtrlSFPrompt
+  vmap     <Leader>nn <Plug>CtrlSFVwordPath
+  vmap     <Leader>nf <Plug>CtrlSFVwordExec
+  nmap     <Leader>nn <Plug>CtrlSFCwordPath
+  nmap     <Leader>np <Plug>CtrlSFPwordPath
+  nnoremap <Leader>no :CtrlSFOpen<CR>
+  nnoremap <Leader>nt :CtrlSFToggle<CR>
+  inoremap <Leader>nt <Esc>:CtrlSFToggle<CR>
+
+  " UltiSnips mappings
+  let g:UltiSnipsExpandTrigger="<C-j>"
+  let g:UltiSnipsJumpForwardTrigger="<C-j>"
+  let g:UltiSnipsJumpBackwardTrigger="<C-k>"
+
   " Run marcos over selected lines
   xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
   function! ExecuteMacroOverVisualRange()
@@ -281,4 +332,5 @@ function! UserConfig()
     endif
     echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
   endfunc
+
 endfunction
