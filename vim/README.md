@@ -1,4 +1,2 @@
-
-### Where's your .vimrc?
-I'm quite a heavy user of [Neovim editor](https://neovim.io) 
-although don't actively use .vimrc file for my editor configuration and prefer [space-vim](https://github.com/liuchengxu/space-vim) distribution instead.
+### My init.vim
+I use NeoVim in my daily work, I don't think it will work on Vim (but you can try if you want to)

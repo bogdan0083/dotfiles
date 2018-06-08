@@ -25,8 +25,13 @@ Plug 'kana/vim-textobj-entire'
 " Session management
 Plug 'xolox/vim-session'
 
+Plug 'tpope/vim-obsession'
+
 " Smart f key
 Plug 'rhysd/clever-f.vim'
+
+" Kill buffer
+Plug 'moll/vim-bbye'
 
 " Better copy/paste from a terminal
 Plug 'lxhillwind/leader-clipboard'
@@ -41,14 +46,22 @@ Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'rhysd/vim-grammarous'
 
 " Completion
-Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
+" Plug 'autozimu/LanguageClient-neovim', {
+"   \ 'branch': 'next',
+"   \ 'do': 'bash install.sh',
+"   \ }
+
+" nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+" Or map each action separately
+" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 Plug 'roxma/nvim-completion-manager'
 Plug 'roxma/ncm-rct-complete'
 Plug 'fgrsnau/ncm-otherbuf'
-Plug 'sourcegraph/javascript-typescript-langserver', {'for': ['javascript'], 'do': 'npm install && npm run build'}
-
 " Autopairs for brackets
 Plug 'jiangmiao/auto-pairs'
+" Plug 'sourcegraph/javascript-typescript-langserver', {'do': 'npm install && npm run build'}
 
 " Must have
 Plug 'tpope/vim-surround'
@@ -77,7 +90,10 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 " Colorscheme
-Plug 'nanotech/jellybeans.vim'
+" Plug 'nanotech/gruvbox.vim'
+Plug 'flazz/vim-colorschemes'
+Plug 'lifepillar/vim-solarized8'
+Plug 'sickill/vim-monokai'
 
 " Tool for refactoring
 Plug 'dyng/ctrlsf.vim'
@@ -92,6 +108,7 @@ Plug 'vim-airline/vim-airline'
 " Plug 'tpope/vim-projectionist'
 
 " Something useful i guess
+" (have no idea what it is)
 Plug 'tpope/vim-dispatch'
 
 " Align pieces of code nicely
@@ -122,7 +139,7 @@ Plug 'honza/vim-snippets'
 " Plug 'flowtype/vim-flow'
 
 " PHP
-Plug 'felixfbecker/php-language-server', { 'for': 'php', 'do': 'composer install && composer run-script parse-stubs'}
+" Plug 'felixfbecker/php-language-server', { 'for': 'php', 'do': 'composer install && composer run-script parse-stubs'}
 Plug 'jwalton512/vim-blade', { 'for': 'php' }
 Plug '2072/PHP-Indenting-for-VIm', { 'for': 'php' }
 Plug 'StanAngeloff/php.vim', { 'for': 'php' }
@@ -142,10 +159,10 @@ Plug 'elzr/vim-json'
 
 " jsx
 " TODO: turn it on?
-" Plug 'mxw/vim-jsx'
-
+Plug 'mxw/vim-jsx'
 " Javascript
-Plug 'othree/yajs.vim'
+" Plug 'othree/yajs.vim'
+Plug 'pangloss/vim-javascript'
 
 " Improve jsx
 Plug 'chemzqm/vim-jsx-improve', { 'for': 'javascript' }
@@ -217,7 +234,7 @@ let mapleader = "s"
 " Enable hotkeys for Russian layout
 set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
 
-" set visualbell
+set visualbell
 
 if has('mouse')
   set mouse=a
@@ -226,7 +243,9 @@ endif
 set relativenumber
 set cursorline
 set hidden
-set nofoldenable
+" set foldmethod=indent
+set foldlevelstart=10
+set foldlevel=1
 set wrap
 set linebreak
 set number
@@ -248,12 +267,12 @@ set softtabstop=2
 set shiftwidth=2
 
 set splitbelow
-" set background=dark
-set cmdheight=2
-" set t_Co=256
+set cmdheight=1
 set scrolloff=5
 
-colorscheme jellybeans
+set background=dark
+set termguicolors
+colorscheme solarized8_dark_high
 
 " ================ Persistent Undo ==================
 " Keep undo history across sessions, by storing in file.
@@ -324,8 +343,8 @@ nmap <silent><Leader>ts :TestSuite<CR>
 nmap <silent><Leader>tl :TestLast<CR>
 nmap <silent><Leader>tg :TestVisit<CR>
 
-nnoremap <C-I> g;
-nnoremap <C-O> g,
+" nnoremap <C-I> g;
+" nnoremap <C-O> g,
 
 " shortcuts for textobj block
 xmap a; ab
@@ -334,7 +353,6 @@ xmap i; ib
 omap i; ib
 xmap ; ib
 omap ; ib
-
 
 nnoremap <Leader>gA :Git add -A<CR>
 
@@ -359,17 +377,12 @@ nnoremap <Leader>sc :SClose<CR>
 " Restart Vim
 nnoremap <Leader>sr :RestartVim<CR>
 
-" Set ale linters
-let g:ale_linters = {
-\   'javascript': ['eslint', 'flow'],
-\}
-
 " Set session dir for startify
 let g:startify_session_dir = '~/.vim/sessions'
 let g:startify_list_order = ['sessions', 'files', 'bookmarks', 'dir']
 
 " Kill buffer without closing split window
-nnoremap <Leader>bd :bp\|bd! #<CR>
+nnoremap <Leader>bd :Bdelete<CR>
 
 " Save buffer
 nnoremap <Leader>ww :w!<CR>
@@ -424,6 +437,15 @@ nnoremap <Leader>pp :Neoformat prettiereslint<CR>
 inoremap <expr> <C-j> pumvisible() ? "\<C-N>" : "\<C-j>"
 inoremap <expr> <C-k> pumvisible() ? "\<C-P>" : "\<C-k>"
 
+" Javascript
+let g:javascript_plugin_jsdoc = 1
+let g:javascript_plugin_flow = 1
+
+augroup javascript_folding
+  au!
+  au FileType javascript setlocal foldmethod=syntax
+augroup END
+
 " Move between linting errors
 nnoremap ]r :ALENextWrap<CR>
 nnoremap [r :ALEPreviousWrap<CR>
@@ -438,7 +460,6 @@ let g:multi_cursor_skip_key = '<C-x>'
 let g:multi_cursor_quit_key = '<Esc>'
 
 " nvim-completion-manager
-
 let g:cm_matcher = {'module': 'cm_matchers.fuzzy_matcher', 'case': 'smartcase'}
 let g:cm_refresh_length = [[1,2],[7,3]]
 let g:cm_sources_override = {
@@ -448,9 +469,10 @@ let g:cm_sources_override = {
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" imap <expr> <S-CR>  (pumvisible() ?  "\<c-y>\<Plug>(expand_or_nl)" : "\<CR>")
-" imap <expr> <Plug>(expand_or_nl) (cm#completed_is_snippet() ? "\<C-U>":"\<CR>")
-" inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+
+" ctrlSF
+let g:ctrlsf_position = 'right'
+let g:ctrlsf_winsize = '40%'
 
 nmap     <Leader>nn <Plug>CtrlSFPrompt
 vmap     <Leader>nn <Plug>CtrlSFVwordPath
@@ -462,28 +484,31 @@ nnoremap <Leader>nt :CtrlSFToggle<CR>
 inoremap <Leader>nt <Esc>:CtrlSFToggle<CR>
 
 " LanguageClient settings
+
 nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 
 let g:LanguageClient_autoStart = 1
-" \ 'javascript': ['node', expand('~/.vim/plugged/javascript-typescript-langserver/lib/language-server-stdio.js')],
-" \ 'javascript.jsx': ['node', expand('~/.vim/plugged/javascript-typescript-langserver/lib/language-server-stdio.js')],
+
+" \ 'php': ['php', expand('~/.vim/plugged/php-language-server/bin/php-language-server.php')],
+" \ 'ruby': ['language_server-ruby'],
 
 let g:LanguageClient_serverCommands = {
-      \ 'php': ['php', expand('~/.vim/plugged/php-language-server/bin/php-language-server.php')],
-      \ 'ruby': ['language_server-ruby'],
-      \ }
+  \ 'javascript': ['node', expand('~/.vim/plugged/javascript-typescript-langserver/lib/language-server-stdio.js')],
+  \ 'javascript.jsx': ['node', expand('~/.vim/plugged/javascript-typescript-langserver/lib/language-server-stdio.js')],
+  \ }
 
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_toc_autofit = 1
 let g:lexical#spelllang = ['en_us', 'ru_ru']
 
 let g:ale_php_phpcs_standard = 'PSR2'
+
 let g:ale_linters = {
-      \   'markdown': [],
-      \   'javascript': ['eslint', 'flow'],
-      \}
+  \   'markdown': [],
+  \   'javascript': ['eslint'],
+  \}
 
 " let g:acp_enableAtStartup = 0
 
@@ -529,7 +554,7 @@ let g:airline#extensions#ale#enabled = 1
 function! neoformat#formatters#javascript#prettiereslint() abort
   return {
   \ 'exe': 'prettier-eslint',
-  \ 'args': ['--stdin', '--stdin-filepath', '%:p', '--print-width 80'],
+  \ 'args': ['--stdin', '--stdin-filepath', '%:p', '--print-width 90'],
   \ 'stdin': 1,
   \ }
 endfunction
