@@ -3,6 +3,7 @@ set nocompatible
 call plug#begin('~/.vim/plugged')
 
 " Defaults
+" Test comment
 Plug 'tpope/vim-sensible'
 
 " Start screen for vim
@@ -24,7 +25,6 @@ Plug 'kana/vim-textobj-entire'
 
 " Session management
 Plug 'xolox/vim-session'
-
 Plug 'tpope/vim-obsession'
 
 " Smart f key
@@ -32,9 +32,7 @@ Plug 'rhysd/clever-f.vim'
 
 " Kill buffer
 Plug 'moll/vim-bbye'
-
-" Better copy/paste from a terminal
-Plug 'lxhillwind/leader-clipboard'
+Plug 'arithran/vim-delete-hidden-buffers'
 
 " Highglight unneeded whitespace
 Plug 'ntpeters/vim-better-whitespace'
@@ -45,29 +43,32 @@ Plug 'ConradIrwin/vim-bracketed-paste'
 " Grammar (TODO: set keymaps for this plugin)
 Plug 'rhysd/vim-grammarous'
 
-" Completion
-" Plug 'autozimu/LanguageClient-neovim', {
-"   \ 'branch': 'next',
-"   \ 'do': 'bash install.sh',
-"   \ }
+" LanguageClient
+Plug 'autozimu/LanguageClient-neovim', {
+      \ 'branch': 'next',
+      \ 'do': 'bash install.sh',
+      \ }
+Plug 'sourcegraph/javascript-typescript-langserver', {'do': 'npm install && npm run build'}
 
-" nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-" Or map each action separately
-" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-Plug 'roxma/nvim-completion-manager'
-Plug 'roxma/ncm-rct-complete'
-Plug 'fgrsnau/ncm-otherbuf'
+" Completion
+Plug 'ncm2/ncm2'
+" ncm2 requires nvim-yarp
+Plug 'roxma/nvim-yarp'
+
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-abbrfuzzy'
+
 " Autopairs for brackets
 Plug 'jiangmiao/auto-pairs'
-" Plug 'sourcegraph/javascript-typescript-langserver', {'do': 'npm install && npm run build'}
 
 " Must have
 Plug 'tpope/vim-surround'
 
+" Easy resizing of windows
+Plug 'hsanson/vim-winmode'
+
 " Much nicer text objects
-" Plug 'wellle/targets.vim'
 Plug 'rhysd/vim-textobj-anyblock'
 
 " Syntax-checker
@@ -75,6 +76,7 @@ Plug 'w0rp/ale'
 
 " NERDTree
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Easy commenting
 Plug 'tomtom/tcomment_vim'
@@ -82,12 +84,19 @@ Plug 'tomtom/tcomment_vim'
 " Repeat for plugins
 Plug 'tpope/vim-repeat'
 
+" Yankstack
+Plug 'maxbrunsfeld/vim-yankstack'
+
 " Additional useful keymappings
 Plug 'tpope/vim-unimpaired'
 
 " FZF for vim
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+" Plug 'ctrlpvim/ctrlp.vim'
+
+" Vim slash
+Plug 'junegunn/vim-slash'
 
 " Colorscheme
 " Plug 'nanotech/gruvbox.vim'
@@ -104,13 +113,6 @@ Plug 'tpope/vim-fugitive'
 " Cool status bar
 Plug 'vim-airline/vim-airline'
 
-" TODO: have no idea it is needed or not
-" Plug 'tpope/vim-projectionist'
-
-" Something useful i guess
-" (have no idea what it is)
-Plug 'tpope/vim-dispatch'
-
 " Align pieces of code nicely
 Plug 'godlygeek/tabular'
 
@@ -123,33 +125,17 @@ Plug 'digitaltoad/vim-pug', { 'for': 'pug' }
 " Slim
 Plug 'slim-template/vim-slim', { 'for': ['slim', 'slime'] }
 
-" Syntax plugins for elixir. May need this later
-" Plug 'elixir-editors/vim-elixir', { 'for': 'elixir' }
-" Plug 'c-brenn/phoenix.vim', { 'for': 'elixir' }
-" Plug 'slashmili/alchemist.vim', { 'for': 'elixir' }
-" Plug 'rhysd/vim-grammarous'
-
 " Consider .editorconfig
 Plug 'editorconfig/editorconfig-vim'
 
 " Snippets
+" Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
-" Not sure if i need this
-" Plug 'flowtype/vim-flow'
-
 " PHP
-" Plug 'felixfbecker/php-language-server', { 'for': 'php', 'do': 'composer install && composer run-script parse-stubs'}
 Plug 'jwalton512/vim-blade', { 'for': 'php' }
 Plug '2072/PHP-Indenting-for-VIm', { 'for': 'php' }
 Plug 'StanAngeloff/php.vim', { 'for': 'php' }
-
-" Multiple language debugger
-" TODO: check out how to use it
-Plug 'joonty/vdebug', { 'on': 'VdebugStart' }
-
-" NOTE: not sure if i need this
-" Plug 'rhysd/vim-clang-format'
 
 " Cool mappings for html editing
 Plug 'tpope/vim-ragtag'
@@ -157,12 +143,10 @@ Plug 'tpope/vim-ragtag'
 " JSON
 Plug 'elzr/vim-json'
 
-" jsx
-" TODO: turn it on?
-Plug 'mxw/vim-jsx'
 " Javascript
-" Plug 'othree/yajs.vim'
+Plug 'othree/yajs.vim'
 Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
 
 " Improve jsx
 Plug 'chemzqm/vim-jsx-improve', { 'for': 'javascript' }
@@ -176,17 +160,8 @@ Plug 'mattn/emmet-vim'
 " misc plugin
 Plug 'xolox/vim-misc'
 
-" Easytags
-Plug 'xolox/vim-easytags'
-
 " Hightlight enclosing html/xml tags
 Plug 'Valloric/MatchTagAlways'
-
-" Indent guides
-Plug 'nathanaelkane/vim-indent-guides'
-
-" Test plugin
-Plug 'janko-m/vim-test'
 
 " Markdown
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
@@ -239,7 +214,7 @@ set visualbell
 if has('mouse')
   set mouse=a
 endif
-
+set clipboard=unnamedplus
 set relativenumber
 set cursorline
 set hidden
@@ -270,9 +245,16 @@ set splitbelow
 set cmdheight=1
 set scrolloff=5
 
+" note that must keep noinsert in completeopt, the others is optional
+set completeopt=noinsert,menuone,noselect
+
+" supress the annoying 'match x of y', 'The only match' and 'Pattern not
+" found' messages
+set shortmess+=c
+
 set background=dark
 set termguicolors
-colorscheme solarized8_dark_high
+colorscheme gruvbox
 
 " ================ Persistent Undo ==================
 " Keep undo history across sessions, by storing in file.
@@ -297,10 +279,11 @@ map <Tab> :bn<CR>
 map <S-Tab> :bp<CR>
 
 " Use Ctrl-Tab and Alt-Tab to switch tab
-map    <C-Tab>  :tabnext<CR>
-imap   <C-Tab>  <C-O>:tabnext<CR>
-map    <M-Tab>  :tabprev<CR>
-imap   <M-Tab>  <C-O>:tabprev<CR>
+nnoremap [t :tabprev<CR>
+nnoremap ]t :tabnext<CR>
+
+" Close tab
+nnoremap <Leader>tc :tabclose<CR>
 
 " <Leader>[1-9] move to window [1-9]
 for s:i in range(1, 9)
@@ -313,13 +296,13 @@ for s:i in range(1, 9)
 endfor
 
 let g:user_emmet_settings = {
-\  'javascript' : {
-\      'extends' : 'jsx',
-\  },
-\  'javascript.jsx' : {
-\      'extends' : 'javascript',
-\  },
-\}
+      \  'javascript' : {
+      \      'extends' : 'jsx',
+      \  },
+      \  'javascript.jsx' : {
+      \      'extends' : 'javascript',
+      \  },
+      \}
 
 " <Leader>b[1-9] move to buffer [1-9]
 for s:i in range(1, 9)
@@ -356,9 +339,20 @@ omap ; ib
 
 nnoremap <Leader>gA :Git add -A<CR>
 
-" Auto indent pasted text
-" nnoremap p p=`]<C-o>
-" nnoremap P P=`]<C-o>
+" vim-fugitive {
+nnoremap <silent> <Leader>gs :Gstatus<CR>
+nnoremap <silent> <Leader>gd :Gdiff<CR>
+nnoremap <silent> <Leader>gc :Gcommit<CR>
+nnoremap <silent> <Leader>gb :Gblame<CR>
+nnoremap <silent> <Leader>gl :Glog<CR>
+nnoremap <silent> <Leader>gp :Git push<CR>
+nnoremap <silent> <Leader>gr :Gread<CR>
+nnoremap <silent> <Leader>gw :Gwrite<CR>
+nnoremap <silent> <Leader>ge :Gedit<CR>
+" Mnemonic _i_nteractive
+nnoremap <silent> <Leader>ga :Git add -p %<CR>
+nnoremap <silent> <Leader>gg :SignifyToggle<CR>
+"}
 
 " Edit .vimrc
 map <leader>vl :e! $MYVIMRC<CR>
@@ -380,6 +374,7 @@ nnoremap <Leader>sr :RestartVim<CR>
 " Set session dir for startify
 let g:startify_session_dir = '~/.vim/sessions'
 let g:startify_list_order = ['sessions', 'files', 'bookmarks', 'dir']
+" let g:ycm_server_python_interpreter = '/Users/bogdan/.pyenv/shims/python3'
 
 " Kill buffer without closing split window
 nnoremap <Leader>bd :Bdelete<CR>
@@ -391,6 +386,11 @@ nnoremap <Leader>ww :w!<CR>
 tnoremap <Esc> <C-\><C-n>
 autocmd TermOpen * set bufhidden=hide
 
+" Snippets configuration
+" let g:UltiSnipsExpandTrigger="<CR>"
+" let g:UltiSnipsJumpForwardTrigger="<c-b>"
+" let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
 " Quit vim mappings
 nnoremap <Leader>qq :wq<CR>
 nnoremap <Leader>qQ :q!<CR>
@@ -398,13 +398,9 @@ nnoremap <Leader>qa :wqa<CR>
 nnoremap <Leader>qr :source ~/.spacevim <bar> :AirlineRefresh<CR>
 
 " Resize window mappings
-map <M-]> :resize +5<CR>
-map <M-[> :resize -5<CR>
-map <M-9> :vertical resize +5<CR>
-map <M-0> :vertical resize -5<CR>
+nmap <leader><leader>w <Plug>WinModeStart
 
 " Go to tag definition
-nnoremap gd <C-]>
 
 set timeout ttimeoutlen=50
 
@@ -423,19 +419,30 @@ let g:NERDTreeHijackNetrw = 1
 nnoremap <Leader>tf :NERDTreeFind<CR>
 nnoremap <Leader>tt :NERDTreeToggle<CR>
 
+" ctrlP settings
+nnoremap <Leader>o :CtrlP<CR>
+nnoremap <Leader>p :CtrlPMixed<CR>
+nnoremap <Leader>r :CtrlPMRU<CR>
+nnoremap <Space> :CtrlPBuffer<CR>
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+let g:ctrlp_path_sort = 1
+let g:ctrlp_bufname_mod = ':~:.:p'
+let g:ctrlp_bufpath_mod = ''
+
 " FZF settings and mappings
-command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
+" Ag exact search
+command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--exact --delimiter : --nth 4.. '}, <bang>0)
+" command! -bang -nargs=* Files call fzf#vim#ag(<q-args>, {'options': '--global'}, <bang>0)
 nnoremap <Leader>pa :Ag<CR>
-nnoremap <Leader>o :GFiles<CR>
+nnoremap <Leader>o :Files<CR>
+nnoremap <C-Space> :GFiles?<CR>
 nnoremap <Space> :Buffers<CR>
-nnoremap <C-Space> :GFiles<CR>
+nnoremap <Leader><Leader>n :Snippets<CR>
 nnoremap <Leader>ph :History<CR>
 nnoremap <Leader>pt :Tags<CR>
 
 " Prettier
 nnoremap <Leader>pp :Neoformat prettiereslint<CR>
-inoremap <expr> <C-j> pumvisible() ? "\<C-N>" : "\<C-j>"
-inoremap <expr> <C-k> pumvisible() ? "\<C-P>" : "\<C-k>"
 
 " Javascript
 let g:javascript_plugin_jsdoc = 1
@@ -459,14 +466,21 @@ let g:multi_cursor_prev_key = '<C-p>'
 let g:multi_cursor_skip_key = '<C-x>'
 let g:multi_cursor_quit_key = '<Esc>'
 
-" nvim-completion-manager
-let g:cm_matcher = {'module': 'cm_matchers.fuzzy_matcher', 'case': 'smartcase'}
-let g:cm_refresh_length = [[1,2],[7,3]]
-let g:cm_sources_override = {
-      \ 'cm-filepath': {'priority': 4},
-      \ 'cm-tags': {'enable':0}
-      \ }
+" ncm2
+" enable ncm2 for all buffer
+autocmd BufEnter * call ncm2#enable_for_buffer()
+" au TextChangedI * call ncm2#auto_trigger()
+let g:ncm2#matcher = 'abbrfuzzy'
 
+" use a sorter that's more friendly for fuzzy match
+let g:ncm2#sorter = 'abbrfuzzy'
+
+" When the <Enter> key is pressed while the popup menu is visible, it only
+" hides the menu. Use this mapping to close the menu and also start a new
+" line.
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+
+" Use <TAB> to select the popup menu:
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
@@ -491,39 +505,24 @@ nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 
 let g:LanguageClient_autoStart = 1
 
-" \ 'php': ['php', expand('~/.vim/plugged/php-language-server/bin/php-language-server.php')],
-" \ 'ruby': ['language_server-ruby'],
-
 let g:LanguageClient_serverCommands = {
-  \ 'javascript': ['node', expand('~/.vim/plugged/javascript-typescript-langserver/lib/language-server-stdio.js')],
-  \ 'javascript.jsx': ['node', expand('~/.vim/plugged/javascript-typescript-langserver/lib/language-server-stdio.js')],
-  \ }
+      \ 'javascript': ['node', expand('~/.vim/plugged/javascript-typescript-langserver/lib/language-server-stdio.js')],
+      \ 'javascript.jsx': ['node', expand('~/.vim/plugged/javascript-typescript-langserver/lib/language-server-stdio.js')],
+      \ }
 
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_toc_autofit = 1
 let g:lexical#spelllang = ['en_us', 'ru_ru']
 
 let g:ale_php_phpcs_standard = 'PSR2'
+let g:ale_lint_on_text_changed = 'never'
 
 let g:ale_linters = {
-  \   'markdown': [],
-  \   'javascript': ['eslint'],
-  \}
-
-" let g:acp_enableAtStartup = 0
-
-" TODO: setup vim-easytags
-
-" let g:easytags_async = 1
-
-" Automatically removing all trailing whitespace
-" autocmd BufWritePre * :%s/\s\+$//e
+      \   'markdown': [],
+      \   'javascript': ['eslint', 'flow'],
+      \}
 
 let g:vim_markdown_folding_disabled = 1
-
-nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 
 " Autoformat buffer
 nnoremap <Leader>ff :Autoformat<CR>
@@ -547,36 +546,28 @@ cmap w!! %!sudo tee > /dev/null %
 let g:bufExplorerDisableDefaultKeyMapping=1
 let g:bufExplorerShowRelativePath=1
 
-" let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_at_startup = 1
 
 let g:airline#extensions#ale#enabled = 1
+let g:airline_powerline_fonts = 1
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#keymap_ignored_filetypes = ['vimfiler', 'nerdtree']
+" let airline#extensions#tabline#ignore_bufadd_pat =
+"             \ '\c\vgundo|undotree|vimfiler|tagbar|nerd_tree'
+" let g:airline#extensions#tabline#fnamemod = ':t'
+" function! airline#extensions#tabline#formatters#foo#format(bufnr, buffers)
+"   return fnamemodify(bufname(a:bufnr), ':t')
+" endfunction
+" let g:airline#extensions#tabline#formatter = 'foo'
 
 function! neoformat#formatters#javascript#prettiereslint() abort
   return {
-  \ 'exe': 'prettier-eslint',
-  \ 'args': ['--stdin', '--stdin-filepath', '%:p', '--print-width 90'],
-  \ 'stdin': 1,
-  \ }
+        \ 'exe': 'prettier-eslint',
+        \ 'args': ['--stdin', '--stdin-filepath', '%:p', '--print-width 90'],
+        \ 'stdin': 1,
+        \ }
 endfunction
 
 augroup common
   autocmd BufEnter * EnableStripWhitespaceOnSave
 augroup END
-
-" augroup filetypedetect
-"   autocmd!
-"   au BufEnter *.markdown,*.mkd,*.md setl wrap tw=79
-"   au BufEnter *.json setl ft=javascript
-"   au BufEnter *.coffee setl sw=2 expandtab
-"   au BufEnter *.py setl ts=4 sw=4 sts=4
-"   autocmd BufEnter *.php setlocal ts=4 sw=4 sts=4
-"   autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
-"   autocmd BufNewFile,BufRead *.slime setlocal filetype=slim
-"   au BufEnter *.js setl ts=2 sw=2 sts=2
-"   au BufEnter *.html setl ts=4 sw=4 sts=4
-"   au BufEnter *.tex setl wrap tw=79 fo=tcqor
-"   au BufEnter *.[ch] setl cindent
-"   au BufEnter *.[ch]pp setl cindent
-"   au BufEnter Makefile setl ts=4 sts=4 sw=4 noet list
-"   au BufEnter *.es6 setf javascript
-" augroup END
