@@ -3,8 +3,13 @@ set nocompatible
 call plug#begin('~/.vim/plugged')
 
 " Defaults
-" Test comment
 Plug 'tpope/vim-sensible'
+
+" Term
+Plug 'kassio/neoterm'
+
+" Set working directory to project
+Plug 'airblade/vim-rooter'
 
 " Start screen for vim
 Plug 'mhinz/vim-startify'
@@ -18,6 +23,12 @@ Plug 'easymotion/vim-easymotion'
 " Autoformat
 Plug 'Chiel92/vim-autoformat'
 Plug 'sbdchd/neoformat'
+
+" Vim-test
+Plug 'janko-m/vim-test'
+
+" Switch values
+Plug 'AndrewRadev/switch.vim'
 
 " Custom text-objects
 Plug 'kana/vim-textobj-user'
@@ -43,21 +54,9 @@ Plug 'ConradIrwin/vim-bracketed-paste'
 " Grammar (TODO: set keymaps for this plugin)
 Plug 'rhysd/vim-grammarous'
 
-" LanguageClient
-Plug 'autozimu/LanguageClient-neovim', {
-      \ 'branch': 'next',
-      \ 'do': 'bash install.sh',
-      \ }
-Plug 'sourcegraph/javascript-typescript-langserver', {'do': 'npm install && npm run build'}
-
 " Completion
-Plug 'ncm2/ncm2'
-" ncm2 requires nvim-yarp
-Plug 'roxma/nvim-yarp'
-
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-abbrfuzzy'
+Plug 'neoclide/coc.nvim', {'do': 'yarn install'}
+Plug 'Shougo/denite.nvim'
 
 " Autopairs for brackets
 Plug 'jiangmiao/auto-pairs'
@@ -72,7 +71,7 @@ Plug 'hsanson/vim-winmode'
 Plug 'rhysd/vim-textobj-anyblock'
 
 " Syntax-checker
-Plug 'w0rp/ale'
+" Plug 'w0rp/ale'
 
 " NERDTree
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
@@ -93,22 +92,26 @@ Plug 'tpope/vim-unimpaired'
 " FZF for vim
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-" Plug 'ctrlpvim/ctrlp.vim'
+
+" Vim slash
+Plug 'junegunn/vim-slash'
 
 " Vim slash
 Plug 'junegunn/vim-slash'
 
 " Colorscheme
-" Plug 'nanotech/gruvbox.vim'
+Plug 'mhartington/oceanic-next'
 Plug 'flazz/vim-colorschemes'
 Plug 'lifepillar/vim-solarized8'
 Plug 'sickill/vim-monokai'
+Plug 'rakr/vim-one'
 
 " Tool for refactoring
 Plug 'dyng/ctrlsf.vim'
 
 " Plugin for Git
 Plug 'tpope/vim-fugitive'
+Plug 'jreybert/vimagit'
 
 " Cool status bar
 Plug 'vim-airline/vim-airline'
@@ -129,7 +132,7 @@ Plug 'slim-template/vim-slim', { 'for': ['slim', 'slime'] }
 Plug 'editorconfig/editorconfig-vim'
 
 " Snippets
-" Plug 'SirVer/ultisnips'
+Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
 " PHP
@@ -141,12 +144,16 @@ Plug 'StanAngeloff/php.vim', { 'for': 'php' }
 Plug 'tpope/vim-ragtag'
 
 " JSON
-Plug 'elzr/vim-json'
+" Plug 'elzr/vim-json'
+Plug 'neoclide/jsonc.vim'
 
 " Javascript
 Plug 'othree/yajs.vim'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
+
+" Typescript
+Plug 'leafgarland/typescript-vim'
 
 " Improve jsx
 Plug 'chemzqm/vim-jsx-improve', { 'for': 'javascript' }
@@ -159,6 +166,8 @@ Plug 'mattn/emmet-vim'
 
 " misc plugin
 Plug 'xolox/vim-misc'
+
+" Easytags
 
 " Hightlight enclosing html/xml tags
 Plug 'Valloric/MatchTagAlways'
@@ -179,7 +188,7 @@ Plug 'tpope/vim-rails', { 'for': 'ruby' }
 Plug 'tpope/vim-bundler', { 'for': 'ruby' }
 
 " Add 'end' keyword in Ruby
-Plug 'tpope/vim-endwise'
+" Plug 'tpope/vim-endwise'
 Plug 'michaeljsmith/vim-indent-object'
 
 " Clojure/Scheme/Racket
@@ -210,6 +219,8 @@ let mapleader = "s"
 set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
 
 set visualbell
+set autoread
+set noeol
 
 if has('mouse')
   set mouse=a
@@ -218,9 +229,12 @@ set clipboard=unnamedplus
 set relativenumber
 set cursorline
 set hidden
-" set foldmethod=indent
+set foldmethod=syntax
 set foldlevelstart=10
-set foldlevel=1
+" set foldlevel=10
+" set foldnestmax=1
+
+let javaScript_fold=1         " JavaScript
 set wrap
 set linebreak
 set number
@@ -242,7 +256,7 @@ set softtabstop=2
 set shiftwidth=2
 
 set splitbelow
-set cmdheight=1
+set cmdheight=2
 set scrolloff=5
 
 " note that must keep noinsert in completeopt, the others is optional
@@ -254,7 +268,7 @@ set shortmess+=c
 
 set background=dark
 set termguicolors
-colorscheme gruvbox
+colorscheme one
 
 " ================ Persistent Undo ==================
 " Keep undo history across sessions, by storing in file.
@@ -309,12 +323,6 @@ for s:i in range(1, 9)
   execute 'nnoremap <Leader>b' . s:i . ' :b' . s:i . '<CR>'
 endfor
 
-" Map ctrl-movement keys to window switching
-map <C-k> <C-w><Up>
-map <C-j> <C-w><Down>
-map <C-l> <C-w><Right>
-map <C-h> <C-w><Left>
-
 " Alisases to ]<Space> and [<Space>
 nmap <Leader>[ [<Space>
 nmap <Leader>] ]<Space>
@@ -324,6 +332,7 @@ nmap <silent><Leader>tn :TestNearest<CR>
 nmap <silent><Leader>tf :TestFile<CR>
 nmap <silent><Leader>ts :TestSuite<CR>
 nmap <silent><Leader>tl :TestLast<CR>
+nmap <silent><Leader>. :TestLast<CR>
 nmap <silent><Leader>tg :TestVisit<CR>
 
 " nnoremap <C-I> g;
@@ -349,10 +358,15 @@ nnoremap <silent> <Leader>gp :Git push<CR>
 nnoremap <silent> <Leader>gr :Gread<CR>
 nnoremap <silent> <Leader>gw :Gwrite<CR>
 nnoremap <silent> <Leader>ge :Gedit<CR>
+
+
 " Mnemonic _i_nteractive
 nnoremap <silent> <Leader>ga :Git add -p %<CR>
 nnoremap <silent> <Leader>gg :SignifyToggle<CR>
 "}
+
+" Vimagit
+nnoremap <silent> <Leader>gv :Magit<CR>
 
 " Edit .vimrc
 map <leader>vl :e! $MYVIMRC<CR>
@@ -360,6 +374,7 @@ map <leader>vr :source $MYVIMRC<CR>
 
 " Vim session
 let g:session_autosave = 'yes'
+let g:session_autoload = 0
 
 " session mapping
 nnoremap <Leader>ss :SaveSession!<CR>
@@ -387,13 +402,10 @@ tnoremap <Esc> <C-\><C-n>
 autocmd TermOpen * set bufhidden=hide
 
 " Snippets configuration
-" let g:UltiSnipsExpandTrigger="<CR>"
-" let g:UltiSnipsJumpForwardTrigger="<c-b>"
-" let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 " Quit vim mappings
 nnoremap <Leader>qq :wq<CR>
-nnoremap <Leader>qQ :q!<CR>
+nnoremap <Leader>qq :q!<CR>
 nnoremap <Leader>qa :wqa<CR>
 nnoremap <Leader>qr :source ~/.spacevim <bar> :AirlineRefresh<CR>
 
@@ -411,38 +423,25 @@ let g:EasyMotion_smartcase = 1
 nmap <Leader>j <Plug>(easymotion-prefix)
 
 " <Leader>f{char} to move to {char}
-map  <Leader>k <Plug>(easymotion-bd-f)
 nmap <Leader>k <Plug>(easymotion-overwin-f)
+nmap e <Plug>(easymotion-bd-f)
 
 " NERDTree
 let g:NERDTreeHijackNetrw = 1
 nnoremap <Leader>tf :NERDTreeFind<CR>
 nnoremap <Leader>tt :NERDTreeToggle<CR>
 
-" ctrlP settings
-nnoremap <Leader>o :CtrlP<CR>
-nnoremap <Leader>p :CtrlPMixed<CR>
-nnoremap <Leader>r :CtrlPMRU<CR>
-nnoremap <Space> :CtrlPBuffer<CR>
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
-let g:ctrlp_path_sort = 1
-let g:ctrlp_bufname_mod = ':~:.:p'
-let g:ctrlp_bufpath_mod = ''
-
 " FZF settings and mappings
 " Ag exact search
 command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--exact --delimiter : --nth 4.. '}, <bang>0)
-" command! -bang -nargs=* Files call fzf#vim#ag(<q-args>, {'options': '--global'}, <bang>0)
 nnoremap <Leader>pa :Ag<CR>
+nnoremap <Leader>pp :BLines<CR>
 nnoremap <Leader>o :Files<CR>
 nnoremap <C-Space> :GFiles?<CR>
 nnoremap <Space> :Buffers<CR>
-nnoremap <Leader><Leader>n :Snippets<CR>
+nnoremap <Leader>N :Snippets<CR>
 nnoremap <Leader>ph :History<CR>
 nnoremap <Leader>pt :Tags<CR>
-
-" Prettier
-nnoremap <Leader>pp :Neoformat prettiereslint<CR>
 
 " Javascript
 let g:javascript_plugin_jsdoc = 1
@@ -466,23 +465,177 @@ let g:multi_cursor_prev_key = '<C-p>'
 let g:multi_cursor_skip_key = '<C-x>'
 let g:multi_cursor_quit_key = '<Esc>'
 
-" ncm2
-" enable ncm2 for all buffer
-autocmd BufEnter * call ncm2#enable_for_buffer()
-" au TextChangedI * call ncm2#auto_trigger()
-let g:ncm2#matcher = 'abbrfuzzy'
+" ctrlSF
+let g:ctrlsf_position = 'right'
+let g:ctrlsf_winsize = '50%'
+let g:ctrlsf_auto_focus = {
+  \ "at": "start"
+  \ }
 
-" use a sorter that's more friendly for fuzzy match
-let g:ncm2#sorter = 'abbrfuzzy'
+nmap     <Leader>nn <Plug>CtrlSFPrompt
+vmap     <Leader>nn <Plug>CtrlSFVwordPath
+vmap     <Leader>nf <Plug>CtrlSFVwordExec
+nmap     <Leader>nn <Plug>CtrlSFCwordPath
+nmap     <Leader>np <Plug>CtrlSFPwordPath
+nnoremap <Leader>no :CtrlSFOpen<CR>
+nnoremap <Leader>nt :CtrlSFToggle<CR>
+inoremap <Leader>nt <Esc>:CtrlSFToggle<CR>
 
-" When the <Enter> key is pressed while the popup menu is visible, it only
-" hides the menu. Use this mapping to close the menu and also start a new
-" line.
-inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+" Better display for messages
+set cmdheight=2
 
-" Use <TAB> to select the popup menu:
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" Smaller updatetime for CursorHold & CursorHoldI
+set updatetime=300
+
+" always show signcolumns
+set signcolumn=yes
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> for trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <C-x><C-o> to complete 'word', 'emoji' and 'include' sources
+imap <silent> <C-x><C-o> <Plug>(coc-complete-custom)
+
+" Use <cr> for confirm completion.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `[c` and `]c` for navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gt <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K for show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if &filetype == 'vim'
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Show signature help while editing
+autocmd CursorHoldI * silent! call CocActionAsync('showSignatureHelp')
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap for format selected region
+vmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+vmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+
+" Use `:Format` for format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Use `:Fold` for fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+
+" Add diagnostic info for https://github.com/itchyny/lightline.vim
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'cocstatus': 'coc#status'
+      \ },
+      \ }
+
+
+
+" Shortcuts for denite interface
+" Show symbols of current buffer
+nnoremap <silent> <Leader><space>o  :<C-u>Denite coc-symbols<cr>
+" Search symbols of current workspace
+nnoremap <silent> <Leader><space>t  :<C-u>Denite coc-workspace<cr>
+" Show diagnostics of current workspace
+nnoremap <silent> <Leader><space>a  :<C-u>Denite coc-diagnostic<cr>
+" Show available commands
+nnoremap <silent> <Leader><space>c  :<C-u>Denite coc-command<cr>
+" Show available services
+nnoremap <silent> <Leader><space>s  :<C-u>Denite coc-service<cr>
+" Show links of current buffer
+nnoremap <silent> <Leader><space>l  :<C-u>Denite coc-link<cr>
+
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_toc_autofit = 1
+let g:lexical#spelllang = ['en_us', 'ru_ru']
+
+let g:ale_php_phpcs_standard = 'PSR2'
+let g:ale_lint_on_text_changed = 'never'
+
+let g:ale_linters = {
+      \   'markdown': [],
+      \   'javascript': ['eslint'],
+      \}
+
+let g:vim_markdown_folding_disabled = 1
+
+" Autoformat buffer
+nnoremap <Leader>ff :Autoformat<CR>
+
+" set text wrapping toggles
+nmap <silent> <leader>tw :set invwrap<CR>:set wrap?<CR>
+
+" find merge conflict markers
+nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>
+
+let NERDTreeIgnore = ['\.pyc$', '\.retry$']
+
+nmap <silent> // :nohlsearch<CR>
+
+" Javascript
+let g:javascript_plugin_jsdoc = 1
+let g:javascript_plugin_flow = 1
+
+augroup javascript_folding
+  au!
+  au FileType javascript setlocal foldmethod=syntax
+augroup END
+
+" Move between linting errors
+nnoremap ]r :ALENextWrap<CR>
+nnoremap [r :ALEPreviousWrap<CR>
+
+" Startify
+nnoremap <silent><Leader>bh :Startify<CR>
+
+" Multiple cursors mappings
+let g:multi_cursor_next_key = '<C-n>'
+let g:multi_cursor_prev_key = '<C-p>'
+let g:multi_cursor_skip_key = '<C-x>'
+let g:multi_cursor_quit_key = '<Esc>'
 
 " ctrlSF
 let g:ctrlsf_position = 'right'
@@ -496,19 +649,6 @@ nmap     <Leader>np <Plug>CtrlSFPwordPath
 nnoremap <Leader>no :CtrlSFOpen<CR>
 nnoremap <Leader>nt :CtrlSFToggle<CR>
 inoremap <Leader>nt <Esc>:CtrlSFToggle<CR>
-
-" LanguageClient settings
-
-nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
-
-let g:LanguageClient_autoStart = 1
-
-let g:LanguageClient_serverCommands = {
-      \ 'javascript': ['node', expand('~/.vim/plugged/javascript-typescript-langserver/lib/language-server-stdio.js')],
-      \ 'javascript.jsx': ['node', expand('~/.vim/plugged/javascript-typescript-langserver/lib/language-server-stdio.js')],
-      \ }
 
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_toc_autofit = 1
@@ -541,24 +681,9 @@ nmap <silent> // :nohlsearch<CR>
 " " when you forgot to open your file with sudo
 cmap w!! %!sudo tee > /dev/null %
 
-" nnoremap <silent> <bs> <C-w><Left>
-
-let g:bufExplorerDisableDefaultKeyMapping=1
-let g:bufExplorerShowRelativePath=1
-
-let g:deoplete#enable_at_startup = 1
 
 let g:airline#extensions#ale#enabled = 1
-let g:airline_powerline_fonts = 1
-" let g:airline#extensions#tabline#enabled = 1
-" let g:airline#extensions#tabline#keymap_ignored_filetypes = ['vimfiler', 'nerdtree']
-" let airline#extensions#tabline#ignore_bufadd_pat =
-"             \ '\c\vgundo|undotree|vimfiler|tagbar|nerd_tree'
-" let g:airline#extensions#tabline#fnamemod = ':t'
-" function! airline#extensions#tabline#formatters#foo#format(bufnr, buffers)
-"   return fnamemodify(bufname(a:bufnr), ':t')
-" endfunction
-" let g:airline#extensions#tabline#formatter = 'foo'
+let g:airline_theme = 'one'
 
 function! neoformat#formatters#javascript#prettiereslint() abort
   return {
