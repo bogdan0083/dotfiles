@@ -20,10 +20,6 @@ Plug 'terryma/vim-multiple-cursors'
 " Easymotion
 Plug 'easymotion/vim-easymotion'
 
-" Autoformat
-Plug 'Chiel92/vim-autoformat'
-Plug 'sbdchd/neoformat'
-
 " Vim-test
 Plug 'janko-m/vim-test'
 
@@ -55,6 +51,8 @@ Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'rhysd/vim-grammarous'
 
 " Completion
+Plug 'Shougo/neco-vim'
+Plug 'neoclide/coc-neco'
 Plug 'neoclide/coc.nvim', {'do': 'yarn install'}
 Plug 'Shougo/denite.nvim'
 
@@ -64,6 +62,12 @@ Plug 'jiangmiao/auto-pairs'
 " Must have
 Plug 'tpope/vim-surround'
 
+" Dispatch tasks
+Plug 'tpope/vim-dispatch'
+
+" Easy replace occurences
+Plug 'svermeulen/vim-subversive'
+
 " Easy resizing of windows
 Plug 'hsanson/vim-winmode'
 
@@ -71,7 +75,7 @@ Plug 'hsanson/vim-winmode'
 Plug 'rhysd/vim-textobj-anyblock'
 
 " Syntax-checker
-" Plug 'w0rp/ale'
+Plug 'w0rp/ale'
 
 " NERDTree
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
@@ -148,12 +152,12 @@ Plug 'tpope/vim-ragtag'
 Plug 'neoclide/jsonc.vim'
 
 " Javascript
-Plug 'othree/yajs.vim'
 Plug 'pangloss/vim-javascript'
+" Plug 'othree/yajs.vim'
 Plug 'mxw/vim-jsx'
 
 " Typescript
-Plug 'leafgarland/typescript-vim'
+Plug 'HerringtonDarkholme/yats.vim'
 
 " Improve jsx
 Plug 'chemzqm/vim-jsx-improve', { 'for': 'javascript' }
@@ -221,6 +225,7 @@ set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNO
 set visualbell
 set autoread
 set noeol
+set nowrap
 
 if has('mouse')
   set mouse=a
@@ -268,7 +273,7 @@ set shortmess+=c
 
 set background=dark
 set termguicolors
-colorscheme one
+colorscheme gruvbox
 
 " ================ Persistent Undo ==================
 " Keep undo history across sessions, by storing in file.
@@ -377,9 +382,14 @@ let g:session_autosave = 'yes'
 let g:session_autoload = 0
 
 " session mapping
-nnoremap <Leader>ss :SaveSession!<CR>
-nnoremap <Leader>sl :OpenSession<CR>
-nnoremap <Leader>sn :SaveSession
+" nnoremap <Leader>ss :SaveSession!<CR>
+" nnoremap <Leader>sl :OpenSession<CR>
+" nnoremap <Leader>sn :SaveSession
+
+nmap <leader>s <plug>(SubversiveSubstituteRange)
+xmap <leader>s <plug>(SubversiveSubstituteRange)
+
+nmap <leader>ss <plug>(SubversiveSubstituteWordRange)
 
 nnoremap <Leader>sc :SClose<CR>
 
@@ -479,7 +489,9 @@ nmap     <Leader>nn <Plug>CtrlSFCwordPath
 nmap     <Leader>np <Plug>CtrlSFPwordPath
 nnoremap <Leader>no :CtrlSFOpen<CR>
 nnoremap <Leader>nt :CtrlSFToggle<CR>
-inoremap <Leader>nt <Esc>:CtrlSFToggle<CR>
+
+" Remove ultisnips expand-trigger
+let g:UltiSnipsExpandTrigger = ''
 
 " Better display for messages
 set cmdheight=2
@@ -543,8 +555,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 
 " Remap for format selected region
-vmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+vmap <leader>fF  <Plug>(coc-format-selected)
+nmap <leader>fF <Plug>(coc-format-selected)
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
 vmap <leader>a  <Plug>(coc-codeaction-selected)
@@ -553,12 +565,16 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 " Remap for do codeAction of current line
 nmap <leader>ac  <Plug>(coc-codeaction)
 
+" CodeAction for organizing imports
+command! -nargs=0 OrganizeImports :call CocAction('tsserver.organizeImports')
+
 " Use `:Format` for format current buffer
 command! -nargs=0 Format :call CocAction('format')
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
-" Use `:Fold` for fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
+vmap <leader>ff :Prettier<CR>
+nmap <leader>ff :Prettier<CR>
+nnoremap <Leader>ci :OrganizeImports<CR>
 
 " Add diagnostic info for https://github.com/itchyny/lightline.vim
 let g:lightline = {
@@ -578,7 +594,7 @@ let g:lightline = {
 " Show symbols of current buffer
 nnoremap <silent> <Leader><space>o  :<C-u>Denite coc-symbols<cr>
 " Search symbols of current workspace
-nnoremap <silent> <Leader><space>t  :<C-u>Denite coc-workspace<cr>
+nnoremap <silent> <Leader>pw  :<C-u>Denite coc-workspace<cr>
 " Show diagnostics of current workspace
 nnoremap <silent> <Leader><space>a  :<C-u>Denite coc-diagnostic<cr>
 " Show available commands
@@ -601,9 +617,6 @@ let g:ale_linters = {
       \}
 
 let g:vim_markdown_folding_disabled = 1
-
-" Autoformat buffer
-nnoremap <Leader>ff :Autoformat<CR>
 
 " set text wrapping toggles
 nmap <silent> <leader>tw :set invwrap<CR>:set wrap?<CR>
@@ -650,6 +663,7 @@ nnoremap <Leader>no :CtrlSFOpen<CR>
 nnoremap <Leader>nt :CtrlSFToggle<CR>
 inoremap <Leader>nt <Esc>:CtrlSFToggle<CR>
 
+" let g:neoterm_open_in_all_tabs = 1
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_toc_autofit = 1
 let g:lexical#spelllang = ['en_us', 'ru_ru']
@@ -664,9 +678,6 @@ let g:ale_linters = {
 
 let g:vim_markdown_folding_disabled = 1
 
-" Autoformat buffer
-nnoremap <Leader>ff :Autoformat<CR>
-
 " set text wrapping toggles
 nmap <silent> <leader>tw :set invwrap<CR>:set wrap?<CR>
 
@@ -677,22 +688,5 @@ let NERDTreeIgnore = ['\.pyc$', '\.retry$']
 
 nmap <silent> // :nohlsearch<CR>
 
-" Allows you to enter sudo pass and save the file
-" " when you forgot to open your file with sudo
-cmap w!! %!sudo tee > /dev/null %
-
-
 let g:airline#extensions#ale#enabled = 1
 let g:airline_theme = 'one'
-
-function! neoformat#formatters#javascript#prettiereslint() abort
-  return {
-        \ 'exe': 'prettier-eslint',
-        \ 'args': ['--stdin', '--stdin-filepath', '%:p', '--print-width 90'],
-        \ 'stdin': 1,
-        \ }
-endfunction
-
-augroup common
-  autocmd BufEnter * EnableStripWhitespaceOnSave
-augroup END
