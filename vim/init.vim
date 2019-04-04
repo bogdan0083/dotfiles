@@ -1,6 +1,6 @@
 set nocompatible
 
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.config/nvim/plugged')
 
 " Defaults
 Plug 'tpope/vim-sensible'
@@ -15,7 +15,7 @@ Plug 'airblade/vim-rooter'
 Plug 'mhinz/vim-startify'
 
 " Multiple cursors
-Plug 'terryma/vim-multiple-cursors'
+" Plug 'terryma/vim-multiple-cursors'
 
 " Easymotion
 Plug 'easymotion/vim-easymotion'
@@ -27,8 +27,10 @@ Plug 'janko-m/vim-test'
 Plug 'AndrewRadev/switch.vim'
 
 " Custom text-objects
-Plug 'kana/vim-textobj-user'
-Plug 'kana/vim-textobj-entire'
+" Plug 'kana/vim-textobj-user'
+" Plug 'kana/vim-textobj-entire'
+" Plug 'rhysd/vim-textobj-anyblock'
+Plug 'wellle/targets.vim'
 
 " Session management
 Plug 'xolox/vim-session'
@@ -44,20 +46,20 @@ Plug 'arithran/vim-delete-hidden-buffers'
 " Highglight unneeded whitespace
 Plug 'ntpeters/vim-better-whitespace'
 
-" :set paste automatically on paste
-Plug 'ConradIrwin/vim-bracketed-paste'
-
 " Grammar (TODO: set keymaps for this plugin)
 Plug 'rhysd/vim-grammarous'
 
 " Completion
-Plug 'Shougo/neco-vim'
+" Plug 'Shougo/neco-vim'
 Plug 'neoclide/coc-neco'
-Plug 'neoclide/coc.nvim', {'do': 'yarn install'}
+Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+" Plug 'neoclide/coc.nvim', { 'do': 'yarn install' }
 Plug 'Shougo/denite.nvim'
 
 " Autopairs for brackets
-Plug 'jiangmiao/auto-pairs'
+" Plug 'jiangmiao/auto-pairs'
+Plug 'cohama/lexima.vim'
+" Plug 'zxqfl/tabnine-vim'
 
 " Must have
 Plug 'tpope/vim-surround'
@@ -71,11 +73,9 @@ Plug 'svermeulen/vim-subversive'
 " Easy resizing of windows
 Plug 'hsanson/vim-winmode'
 
-" Much nicer text objects
-Plug 'rhysd/vim-textobj-anyblock'
 
 " Syntax-checker
-Plug 'w0rp/ale'
+" Plug 'w0rp/ale'
 
 " NERDTree
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
@@ -111,7 +111,8 @@ Plug 'sickill/vim-monokai'
 Plug 'rakr/vim-one'
 
 " Tool for refactoring
-Plug 'dyng/ctrlsf.vim'
+" Plug 'dyng/ctrlsf.vim'
+Plug '~/git-clone/ctrlsf'
 
 " Plugin for Git
 Plug 'tpope/vim-fugitive'
@@ -136,7 +137,6 @@ Plug 'slim-template/vim-slim', { 'for': ['slim', 'slime'] }
 Plug 'editorconfig/editorconfig-vim'
 
 " Snippets
-Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
 " PHP
@@ -152,18 +152,19 @@ Plug 'tpope/vim-ragtag'
 Plug 'neoclide/jsonc.vim'
 
 " Javascript
-Plug 'pangloss/vim-javascript'
+" Plug 'pangloss/vim-javascript'
 " Plug 'othree/yajs.vim'
-Plug 'mxw/vim-jsx'
+" Plug 'mxw/vim-jsx'
+" Plug 'MaxMEllon/vim-jsx-pretty'
 
 " Typescript
-Plug 'HerringtonDarkholme/yats.vim'
+Plug 'HerringtonDarkholme/yats.vim', { 'for': 'typescript' }
 
 " Improve jsx
 Plug 'chemzqm/vim-jsx-improve', { 'for': 'javascript' }
 
 " Node plugin
-Plug 'moll/vim-node', { 'for': 'javascript' }
+" Plug 'moll/vim-node', { 'for': 'javascript' }
 
 " Emmet
 Plug 'mattn/emmet-vim'
@@ -174,7 +175,7 @@ Plug 'xolox/vim-misc'
 " Easytags
 
 " Hightlight enclosing html/xml tags
-Plug 'Valloric/MatchTagAlways'
+" Plug 'Valloric/MatchTagAlways'
 
 " Markdown
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
@@ -212,6 +213,9 @@ Plug 'chrisbra/csv.vim', { 'for': 'csv' }
 
 " Docker
 Plug 'ekalinin/Dockerfile.vim'
+
+" If using Vim-Plug (recommended. Install from https://github.com/junegunn/vim-plug)
+Plug 'reasonml-editor/vim-reason-plus', { 'for': 'reason' }
 
 call plug#end()
 " filetype plugin indent on
@@ -273,7 +277,7 @@ set shortmess+=c
 
 set background=dark
 set termguicolors
-colorscheme gruvbox
+colorscheme one
 
 " ================ Persistent Undo ==================
 " Keep undo history across sessions, by storing in file.
@@ -290,14 +294,16 @@ endif
 nmap j gj
 nmap k gk
 
+" Map Esc to jj combination
+imap jj <Esc>
+
 " Close window
 nnoremap <Leader>wd :close<CR>
 
 " Use TAB to switch buffer
-map <Tab> :bn<CR>
-map <S-Tab> :bp<CR>
+" nnoremap <Tab> :bn<CR>
+" nnoremap <S-Tab> :bp<CR>
 
-" Use Ctrl-Tab and Alt-Tab to switch tab
 nnoremap [t :tabprev<CR>
 nnoremap ]t :tabnext<CR>
 
@@ -340,16 +346,19 @@ nmap <silent><Leader>tl :TestLast<CR>
 nmap <silent><Leader>. :TestLast<CR>
 nmap <silent><Leader>tg :TestVisit<CR>
 
-" nnoremap <C-I> g;
-" nnoremap <C-O> g,
+" Map C-j to C-C
+" I have Esc key remapped to Ctrl, so I need a way to cancel a set of mappings
+tnoremap <C-j> <C-\><C-n>.
+nmap <C-j> <C-C>
+imap <C-j> <C-C>
 
 " shortcuts for textobj block
-xmap a; ab
-omap a; ab
-xmap i; ib
-omap i; ib
-xmap ; ib
-omap ; ib
+xmap b ib
+omap b ib
+xmap q iq
+omap q iq
+xmap c iw
+omap c iw
 
 nnoremap <Leader>gA :Git add -A<CR>
 
@@ -381,10 +390,10 @@ map <leader>vr :source $MYVIMRC<CR>
 let g:session_autosave = 'yes'
 let g:session_autoload = 0
 
-" session mapping
-" nnoremap <Leader>ss :SaveSession!<CR>
-" nnoremap <Leader>sl :OpenSession<CR>
-" nnoremap <Leader>sn :SaveSession
+" s for substitute
+nmap M <plug>(SubversiveSubstitute)
+" nmap mm <plug>(SubversiveSubstituteLine)
+" nmap M <plug>(SubversiveSubstituteToEndOfLine)
 
 nmap <leader>s <plug>(SubversiveSubstituteRange)
 xmap <leader>s <plug>(SubversiveSubstituteRange)
@@ -407,8 +416,6 @@ nnoremap <Leader>bd :Bdelete<CR>
 " Save buffer
 nnoremap <Leader>ww :w!<CR>
 
-" Terminal emulator mappings
-tnoremap <Esc> <C-\><C-n>
 autocmd TermOpen * set bufhidden=hide
 
 " Snippets configuration
@@ -438,13 +445,19 @@ nmap e <Plug>(easymotion-bd-f)
 
 " NERDTree
 let g:NERDTreeHijackNetrw = 1
-nnoremap <Leader>tf :NERDTreeFind<CR>
+" nnoremap <Leader>tf :NERDTreeFind<CR>
 nnoremap <Leader>tt :NERDTreeToggle<CR>
 
 " FZF settings and mappings
 " Ag exact search
-command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--exact --delimiter : --nth 4.. '}, <bang>0)
-nnoremap <Leader>pa :Ag<CR>
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --hidden --ignore-case --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
+  \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+  \   <bang>0)
+
+nnoremap <Leader>pa :Rg<CR>
 nnoremap <Leader>pp :BLines<CR>
 nnoremap <Leader>o :Files<CR>
 nnoremap <C-Space> :GFiles?<CR>
@@ -481,6 +494,7 @@ let g:ctrlsf_winsize = '50%'
 let g:ctrlsf_auto_focus = {
   \ "at": "start"
   \ }
+let g:ctrlsf_ackprg = 'rg'
 
 nmap     <Leader>nn <Plug>CtrlSFPrompt
 vmap     <Leader>nn <Plug>CtrlSFVwordPath
@@ -497,7 +511,7 @@ let g:UltiSnipsExpandTrigger = ''
 set cmdheight=2
 
 " Smaller updatetime for CursorHold & CursorHoldI
-set updatetime=300
+set updatetime=1000300
 
 " always show signcolumns
 set signcolumn=yes
@@ -541,15 +555,12 @@ function! s:show_documentation()
   if &filetype == 'vim'
     execute 'h '.expand('<cword>')
   else
-    call CocAction('doHover')
+    call CocActionAsync('doHover')
   endif
 endfunction
 
 " Show signature help while editing
 autocmd CursorHoldI * silent! call CocActionAsync('showSignatureHelp')
-
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
@@ -565,8 +576,11 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 " Remap for do codeAction of current line
 nmap <leader>ac  <Plug>(coc-codeaction)
 
+" Open yank list
+nnoremap <silent> <leader>y  :<C-u>CocList -A --normal yank<cr>
+
 " CodeAction for organizing imports
-command! -nargs=0 OrganizeImports :call CocAction('tsserver.organizeImports')
+command! -nargs=0 OrganizeImports :exe 'CocCommand tsserver.organizeImports'
 
 " Use `:Format` for format current buffer
 command! -nargs=0 Format :call CocAction('format')
@@ -592,17 +606,8 @@ let g:lightline = {
 
 " Shortcuts for denite interface
 " Show symbols of current buffer
-nnoremap <silent> <Leader><space>o  :<C-u>Denite coc-symbols<cr>
 " Search symbols of current workspace
-nnoremap <silent> <Leader>pw  :<C-u>Denite coc-workspace<cr>
-" Show diagnostics of current workspace
-nnoremap <silent> <Leader><space>a  :<C-u>Denite coc-diagnostic<cr>
-" Show available commands
-nnoremap <silent> <Leader><space>c  :<C-u>Denite coc-command<cr>
-" Show available services
-nnoremap <silent> <Leader><space>s  :<C-u>Denite coc-service<cr>
-" Show links of current buffer
-nnoremap <silent> <Leader><space>l  :<C-u>Denite coc-link<cr>
+nnoremap <silent> <leader>pw  :<C-u>CocList -I symbols<cr>
 
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_toc_autofit = 1
