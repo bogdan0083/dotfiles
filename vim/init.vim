@@ -5,6 +5,7 @@ call plug#begin('~/.config/nvim/plugged')
 " Defaults
 Plug 'tpope/vim-sensible'
 
+
 " Term
 Plug 'kassio/neoterm'
 
@@ -27,9 +28,6 @@ Plug 'janko-m/vim-test'
 Plug 'AndrewRadev/switch.vim'
 
 " Custom text-objects
-" Plug 'kana/vim-textobj-user'
-" Plug 'kana/vim-textobj-entire'
-" Plug 'rhysd/vim-textobj-anyblock'
 Plug 'wellle/targets.vim'
 
 " Session management
@@ -57,9 +55,7 @@ Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
 Plug 'Shougo/denite.nvim'
 
 " Autopairs for brackets
-" Plug 'jiangmiao/auto-pairs'
 Plug 'cohama/lexima.vim'
-" Plug 'zxqfl/tabnine-vim'
 
 " Must have
 Plug 'tpope/vim-surround'
@@ -111,8 +107,10 @@ Plug 'sickill/vim-monokai'
 Plug 'rakr/vim-one'
 
 " Tool for refactoring
-" Plug 'dyng/ctrlsf.vim'
-Plug '~/git-clone/ctrlsf'
+Plug 'dyng/ctrlsf.vim'
+
+" Nvimux
+Plug 'Vigemus/nvimux'
 
 " Plugin for Git
 Plug 'tpope/vim-fugitive'
@@ -373,14 +371,13 @@ nnoremap <silent> <Leader>gr :Gread<CR>
 nnoremap <silent> <Leader>gw :Gwrite<CR>
 nnoremap <silent> <Leader>ge :Gedit<CR>
 
-
 " Mnemonic _i_nteractive
 nnoremap <silent> <Leader>ga :Git add -p %<CR>
 nnoremap <silent> <Leader>gg :SignifyToggle<CR>
 "}
 
 " Vimagit
-nnoremap <silent> <Leader>gv :Magit<CR>
+nnoremap <silent> <M-m> :Magit<CR>
 
 " Edit .vimrc
 map <leader>vl :e! $MYVIMRC<CR>
@@ -390,10 +387,11 @@ map <leader>vr :source $MYVIMRC<CR>
 let g:session_autosave = 'yes'
 let g:session_autoload = 0
 
+nmap <leader>Ss :SaveSession<CR>
+nmap <leader>Sn :SaveSession
+
 " s for substitute
 nmap M <plug>(SubversiveSubstitute)
-" nmap mm <plug>(SubversiveSubstituteLine)
-" nmap M <plug>(SubversiveSubstituteToEndOfLine)
 
 nmap <leader>s <plug>(SubversiveSubstituteRange)
 xmap <leader>s <plug>(SubversiveSubstituteRange)
@@ -441,7 +439,7 @@ nmap <Leader>j <Plug>(easymotion-prefix)
 
 " <Leader>f{char} to move to {char}
 nmap <Leader>k <Plug>(easymotion-overwin-f)
-nmap e <Plug>(easymotion-bd-f)
+nmap <Leader>j <Plug>(easymotion-bd-f)
 
 " NERDTree
 let g:NERDTreeHijackNetrw = 1
@@ -457,11 +455,12 @@ command! -bang -nargs=* Rg
   \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
   \   <bang>0)
 
+
+lua require('nvimux').bootstrap()
+
 nnoremap <Leader>pa :Rg<CR>
 nnoremap <Leader>pp :BLines<CR>
-nnoremap <Leader>o :Files<CR>
-nnoremap <C-Space> :GFiles?<CR>
-nnoremap <Space> :Buffers<CR>
+nnoremap e :GFiles --others --cached --exclude-standard<CR>
 nnoremap <Leader>N :Snippets<CR>
 nnoremap <Leader>ph :History<CR>
 nnoremap <Leader>pt :Tags<CR>
