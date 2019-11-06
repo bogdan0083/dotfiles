@@ -63,7 +63,7 @@ Plug 'cohama/lexima.vim'
 Plug 'tpope/vim-surround'
 
 " Dispatch tasks
-Plug 'tpope/vim-dispatch'
+" Plug 'tpope/vim-dispatch'
 
 " Easy replace occurences
 Plug 'svermeulen/vim-subversive'
@@ -73,10 +73,11 @@ Plug 'hsanson/vim-winmode'
 
 
 " Syntax-checker
-" Plug 'w0rp/ale'
+Plug 'w0rp/ale'
 
 " NERDTree
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+" Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'Shougo/defx.nvim'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Easy commenting
@@ -106,7 +107,8 @@ Plug 'rakr/vim-one'
 Plug 'dyng/ctrlsf.vim'
 
 " Plugin for Git
-Plug 'tpope/vim-fugitive'
+Plug 'lambdalisue/gina.vim'
+" Plug 'tpope/vim-fugitive'
 Plug 'jreybert/vimagit'
 
 " Cool status bar
@@ -297,10 +299,10 @@ for s:i in range(1, 9)
   execute 'nnoremap <Leader>' . s:i . ' :' . s:i . 'wincmd w<CR>'
 endfor
 
-" <Leader><leader>[1-9] move to tab [1-9]
-for s:i in range(1, 9)
-  execute 'nnoremap <Leader><Leader>' . s:i . ' ' . s:i . 'gt'
-endfor
+nnoremap <Leader>ka :1 wincmd w<CR>
+nnoremap <Leader>ks :2 wincmd w<CR>
+nnoremap <Leader>kd :3 wincmd w<CR>
+nnoremap <Leader>kf :4 wincmd w<CR>
 
 let g:user_emmet_settings = {
       \  'javascript' : {
@@ -310,11 +312,6 @@ let g:user_emmet_settings = {
       \      'extends' : 'javascript',
       \  },
       \}
-
-" <Leader>b[1-9] move to buffer [1-9]
-for s:i in range(1, 9)
-  execute 'nnoremap <Leader>b' . s:i . ' :b' . s:i . '<CR>'
-endfor
 
 " Alisases to ]<Space> and [<Space>
 nmap <Leader>[ [<Space>
@@ -330,13 +327,8 @@ nmap <silent><Leader>tg :TestVisit<CR>
 
 " Map C-j to C-C
 " I have Esc key remapped to Ctrl, so I need a way to cancel a set of mappings
-tnoremap <Esc> <C-\><C-n>
-tnoremap <M-[> <Esc>
-tnoremap <C-v><Esc> <Esc>
-tnoremap <C-v><Esc> <Esc>
 tnoremap jj <C-\><C-n>
-nmap <C-j> <C-C>
-imap <C-j> <C-C>
+tnoremap <M-[> <C-\><C-n>
 
 " shortcuts for textobj block
 xmap b ib
@@ -349,15 +341,21 @@ omap c iw
 nnoremap <Leader>gA :Git add -A<CR>
 
 " vim-fugitive {
-nnoremap <silent> <Leader>gs :Gstatus<CR>
-nnoremap <silent> <Leader>gd :Gdiff<CR>
-nnoremap <silent> <Leader>gc :Gcommit<CR>
-nnoremap <silent> <Leader>gb :Gblame<CR>
-nnoremap <silent> <Leader>gl :Glog<CR>
-nnoremap <silent> <Leader>gp :Git push<CR>
-nnoremap <silent> <Leader>gr :Gread<CR>
-nnoremap <silent> <Leader>gw :Gwrite<CR>
-nnoremap <silent> <Leader>ge :Gedit<CR>
+" nnoremap <silent> <Leader>gs :Gstatus<CR>
+" nnoremap <silent> <Leader>gd :Gdiff<CR>
+" nnoremap <silent> <Leader>gc :Gcommit<CR>
+" nnoremap <silent> <Leader>gb :Gblame<CR>
+" nnoremap <silent> <Leader>gl :Glog<CR>
+" nnoremap <silent> <Leader>gp :Git push<CR>
+" nnoremap <silent> <Leader>gr :Gread<CR>
+" nnoremap <silent> <Leader>gw :Gwrite<CR>
+" nnoremap <silent> <Leader>ge :Gedit<CR>
+nnoremap <silent> <Leader>gs :Gina status<CR>
+nnoremap <silent> <Leader>gd :Gina diff<CR>
+nnoremap <silent> <Leader>gc :Gina commit<CR>
+nnoremap <silent> <Leader>gb :Gina blame<CR>
+nnoremap <silent> <Leader>gl :Gina log<CR>
+nnoremap <silent> <Leader>gp :Gina push<CR>
 
 " Mnemonic _i_nteractive
 nnoremap <silent> <Leader>ga :Git add -p %<CR>
@@ -410,7 +408,7 @@ nnoremap <Leader>qa :wqa<CR>
 nnoremap <Leader>qr :source ~/.spacevim <bar> :AirlineRefresh<CR>
 
 " Resize window mappings
-nmap <leader><leader>w <Plug>WinModeStart
+nmap <leader>W <Plug>WinModeStart
 
 set timeoutlen=1000
 set ttimeoutlen=5
@@ -431,7 +429,7 @@ let g:NERDTreeHijackNetrw = 1
 nnoremap <Leader>tt :NERDTreeToggle<CR>
 
 " FZF settings and mappings
-" Ag exact search
+" Rg grep search
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
   \   'rg --column --line-number --hidden --ignore-case --no-heading --color=always '.shellescape(<q-args>), 1,
@@ -439,8 +437,16 @@ command! -bang -nargs=* Rg
   \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
   \   <bang>0)
 
+" Rg grep search
+command! -bang -nargs=* RgNoIgnore
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --hidden -S --no-ignore-vcs --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
+  \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+  \   <bang>0)
 
 nnoremap <Leader>pa :Rg<CR>
+nnoremap <Leader>pA :RgNoIgnore<CR>
 nnoremap <Leader>pp :BLines<CR>
 nnoremap <Leader>o :GFiles --others --cached --exclude-standard<CR>
 nnoremap e :Buffers<CR>
@@ -541,7 +547,7 @@ function! s:show_documentation()
   endif
 endfunction
 
-nmap ge :CocCommand explorer<CR>
+nmap ge :CocCommand explorer --width 20<CR>
 
 " Show signature help while editing
 autocmd CursorHoldI * silent! call CocActionAsync('showSignatureHelp')
@@ -586,8 +592,6 @@ let g:lightline = {
       \ },
       \ }
 
-
-
 " Shortcuts for denite interface
 " Show symbols of current buffer
 " Search symbols of current workspace
@@ -604,6 +608,8 @@ let g:ale_linters = {
       \   'markdown': [],
       \   'javascript': ['eslint'],
       \}
+
+let g:ale_fixers = ['prettier', 'eslint']
 
 let g:vim_markdown_folding_disabled = 1
 
