@@ -5,7 +5,6 @@ call plug#begin('~/.config/nvim/plugged')
 " Defaults
 Plug 'tpope/vim-sensible'
 
-
 " Term
 Plug 'kassio/neoterm'
 
@@ -54,6 +53,9 @@ Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
 " Plug 'neoclide/coc.nvim', { 'do': 'yarn install' }
 Plug 'Shougo/denite.nvim'
 
+" Nvimux
+Plug 'Vigemus/nvimux'
+
 " Autopairs for brackets
 Plug 'cohama/lexima.vim'
 
@@ -83,18 +85,12 @@ Plug 'tomtom/tcomment_vim'
 " Repeat for plugins
 Plug 'tpope/vim-repeat'
 
-" Yankstack
-Plug 'maxbrunsfeld/vim-yankstack'
-
 " Additional useful keymappings
 Plug 'tpope/vim-unimpaired'
 
 " FZF for vim
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-
-" Vim slash
-Plug 'junegunn/vim-slash'
 
 " Vim slash
 Plug 'junegunn/vim-slash'
@@ -108,9 +104,6 @@ Plug 'rakr/vim-one'
 
 " Tool for refactoring
 Plug 'dyng/ctrlsf.vim'
-
-" Nvimux
-Plug 'Vigemus/nvimux'
 
 " Plugin for Git
 Plug 'tpope/vim-fugitive'
@@ -149,12 +142,6 @@ Plug 'tpope/vim-ragtag'
 " Plug 'elzr/vim-json'
 Plug 'neoclide/jsonc.vim'
 
-" Javascript
-" Plug 'pangloss/vim-javascript'
-" Plug 'othree/yajs.vim'
-" Plug 'mxw/vim-jsx'
-" Plug 'MaxMEllon/vim-jsx-pretty'
-
 " Typescript
 Plug 'HerringtonDarkholme/yats.vim', { 'for': 'typescript' }
 
@@ -169,11 +156,6 @@ Plug 'mattn/emmet-vim'
 
 " misc plugin
 Plug 'xolox/vim-misc'
-
-" Easytags
-
-" Hightlight enclosing html/xml tags
-" Plug 'Valloric/MatchTagAlways'
 
 " Markdown
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
@@ -232,6 +214,7 @@ set nowrap
 if has('mouse')
   set mouse=a
 endif
+
 set clipboard=unnamedplus
 set relativenumber
 set cursorline
@@ -286,6 +269,7 @@ if has('persistent_undo')
   set undofile
 endif
 
+lua require('nvimux').bootstrap()
 """ Basics Keymaps
 
 " Turn off linewise keys. Normally, the `j' and `k' keys move the cursor down one entire line. with line wrapping on, this can cause the cursor to actually skip a few lines on the screen because it's moving from line N to line N+1 in the file. I want this to act more visually -- I want `down' to mean the next line on the screen
@@ -346,7 +330,11 @@ nmap <silent><Leader>tg :TestVisit<CR>
 
 " Map C-j to C-C
 " I have Esc key remapped to Ctrl, so I need a way to cancel a set of mappings
-tnoremap <C-j> <C-\><C-n>.
+tnoremap <Esc> <C-\><C-n>
+tnoremap <M-[> <Esc>
+tnoremap <C-v><Esc> <Esc>
+tnoremap <C-v><Esc> <Esc>
+tnoremap jj <C-\><C-n>
 nmap <C-j> <C-C>
 imap <C-j> <C-C>
 
@@ -390,9 +378,6 @@ let g:session_autoload = 0
 nmap <leader>Ss :SaveSession<CR>
 nmap <leader>Sn :SaveSession
 
-" s for substitute
-nmap M <plug>(SubversiveSubstitute)
-
 nmap <leader>s <plug>(SubversiveSubstituteRange)
 xmap <leader>s <plug>(SubversiveSubstituteRange)
 
@@ -427,9 +412,8 @@ nnoremap <Leader>qr :source ~/.spacevim <bar> :AirlineRefresh<CR>
 " Resize window mappings
 nmap <leader><leader>w <Plug>WinModeStart
 
-" Go to tag definition
-
-set timeout ttimeoutlen=50
+set timeoutlen=1000
+set ttimeoutlen=5
 
 " Expand emmet abbreviation
 imap jf <Plug>(emmet-expand-abbr)
@@ -456,11 +440,10 @@ command! -bang -nargs=* Rg
   \   <bang>0)
 
 
-lua require('nvimux').bootstrap()
-
 nnoremap <Leader>pa :Rg<CR>
 nnoremap <Leader>pp :BLines<CR>
-nnoremap e :GFiles --others --cached --exclude-standard<CR>
+nnoremap <Leader>o :GFiles --others --cached --exclude-standard<CR>
+nnoremap e :Buffers<CR>
 nnoremap <Leader>N :Snippets<CR>
 nnoremap <Leader>ph :History<CR>
 nnoremap <Leader>pt :Tags<CR>
@@ -558,6 +541,8 @@ function! s:show_documentation()
   endif
 endfunction
 
+nmap ge :CocCommand explorer<CR>
+
 " Show signature help while editing
 autocmd CursorHoldI * silent! call CocActionAsync('showSignatureHelp')
 
@@ -632,6 +617,9 @@ let NERDTreeIgnore = ['\.pyc$', '\.retry$']
 
 nmap <silent> // :nohlsearch<CR>
 
+let g:nvimux_prefix = '<M-i>'
+let g:nvimux_open_term_by_default = 'true'
+
 " Javascript
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_flow = 1
@@ -665,7 +653,7 @@ nmap     <Leader>nn <Plug>CtrlSFCwordPath
 nmap     <Leader>np <Plug>CtrlSFPwordPath
 nnoremap <Leader>no :CtrlSFOpen<CR>
 nnoremap <Leader>nt :CtrlSFToggle<CR>
-inoremap <Leader>nt <Esc>:CtrlSFToggle<CR>
+inoremap <Leader>nt <Plug>:CtrlSFToggle<CR>
 
 " let g:neoterm_open_in_all_tabs = 1
 let g:vim_markdown_frontmatter = 1
