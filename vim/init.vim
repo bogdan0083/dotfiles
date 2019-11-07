@@ -5,17 +5,11 @@ call plug#begin('~/.config/nvim/plugged')
 " Defaults
 Plug 'tpope/vim-sensible'
 
-" Term
-Plug 'kassio/neoterm'
-
 " Set working directory to project
 Plug 'airblade/vim-rooter'
 
 " Start screen for vim
 Plug 'mhinz/vim-startify'
-
-" Multiple cursors
-" Plug 'terryma/vim-multiple-cursors'
 
 " Easymotion
 Plug 'easymotion/vim-easymotion'
@@ -31,7 +25,6 @@ Plug 'wellle/targets.vim'
 
 " Session management
 Plug 'xolox/vim-session'
-Plug 'tpope/vim-obsession'
 
 " Smart f key
 Plug 'rhysd/clever-f.vim'
@@ -43,18 +36,10 @@ Plug 'arithran/vim-delete-hidden-buffers'
 " Highglight unneeded whitespace
 Plug 'ntpeters/vim-better-whitespace'
 
-" Grammar (TODO: set keymaps for this plugin)
-Plug 'rhysd/vim-grammarous'
-
 " Completion
 " Plug 'Shougo/neco-vim'
 Plug 'neoclide/coc-neco'
 Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
-" Plug 'neoclide/coc.nvim', { 'do': 'yarn install' }
-Plug 'Shougo/denite.nvim'
-
-" Nvimux
-Plug 'Vigemus/nvimux'
 
 " Autopairs for brackets
 Plug 'cohama/lexima.vim'
@@ -63,7 +48,7 @@ Plug 'cohama/lexima.vim'
 Plug 'tpope/vim-surround'
 
 " Dispatch tasks
-" Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-dispatch'
 
 " Easy replace occurences
 Plug 'svermeulen/vim-subversive'
@@ -71,13 +56,11 @@ Plug 'svermeulen/vim-subversive'
 " Easy resizing of windows
 Plug 'hsanson/vim-winmode'
 
-
 " Syntax-checker
 Plug 'w0rp/ale'
 
 " NERDTree
 " Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'Shougo/defx.nvim'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Easy commenting
@@ -92,15 +75,14 @@ Plug 'tpope/vim-unimpaired'
 " FZF for vim
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'liuchengxu/vim-clap'
 
 " Vim slash
 Plug 'junegunn/vim-slash'
 
 " Colorscheme
-Plug 'mhartington/oceanic-next'
 Plug 'flazz/vim-colorschemes'
 Plug 'lifepillar/vim-solarized8'
-Plug 'sickill/vim-monokai'
 Plug 'rakr/vim-one'
 
 " Tool for refactoring
@@ -223,8 +205,6 @@ set cursorline
 set hidden
 set foldmethod=syntax
 set foldlevelstart=10
-" set foldlevel=10
-" set foldnestmax=1
 
 let javaScript_fold=1         " JavaScript
 set wrap
@@ -507,24 +487,22 @@ set signcolumn=yes
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
-  \ pumvisible() ? "\<C-n>" :
-  \ <SID>check_back_space() ? "\<TAB>" :
-  \ coc#refresh()
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
 
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
+let g:coc_snippet_next = '<tab>'
 " Use <c-space> for trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <C-x><C-o> to complete 'word', 'emoji' and 'include' sources
 imap <silent> <C-x><C-o> <Plug>(coc-complete-custom)
-
-" Use <cr> for confirm completion.
-" Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use `[c` and `]c` for navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
@@ -547,7 +525,7 @@ function! s:show_documentation()
   endif
 endfunction
 
-nmap ge :CocCommand explorer --width 20<CR>
+nmap ge :CocCommand explorer<CR>
 
 " Show signature help while editing
 autocmd CursorHoldI * silent! call CocActionAsync('showSignatureHelp')
