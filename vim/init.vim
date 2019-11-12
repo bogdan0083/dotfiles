@@ -90,6 +90,7 @@ Plug 'dyng/ctrlsf.vim'
 
 " Plugin for Git
 Plug 'lambdalisue/gina.vim'
+
 " Plug 'tpope/vim-fugitive'
 Plug 'jreybert/vimagit'
 
@@ -205,6 +206,7 @@ set cursorline
 set hidden
 set foldmethod=syntax
 set foldlevelstart=10
+set shada=!,'400,<50,s10,h
 
 let javaScript_fold=1         " JavaScript
 set wrap
