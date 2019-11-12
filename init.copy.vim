@@ -5,11 +5,17 @@ call plug#begin('~/.config/nvim/plugged')
 " Defaults
 Plug 'tpope/vim-sensible'
 
+" Term
+Plug 'kassio/neoterm'
+
 " Set working directory to project
 Plug 'airblade/vim-rooter'
 
 " Start screen for vim
 Plug 'mhinz/vim-startify'
+
+" Multiple cursors
+" Plug 'terryma/vim-multiple-cursors'
 
 " Easymotion
 Plug 'easymotion/vim-easymotion'
@@ -25,6 +31,7 @@ Plug 'wellle/targets.vim'
 
 " Session management
 Plug 'xolox/vim-session'
+Plug 'tpope/vim-obsession'
 
 " Smart f key
 Plug 'rhysd/clever-f.vim'
@@ -36,10 +43,18 @@ Plug 'arithran/vim-delete-hidden-buffers'
 " Highglight unneeded whitespace
 Plug 'ntpeters/vim-better-whitespace'
 
+" Grammar (TODO: set keymaps for this plugin)
+Plug 'rhysd/vim-grammarous'
+
 " Completion
 " Plug 'Shougo/neco-vim'
 Plug 'neoclide/coc-neco'
 Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+" Plug 'neoclide/coc.nvim', { 'do': 'yarn install' }
+Plug 'Shougo/denite.nvim'
+
+" Nvimux
+Plug 'Vigemus/nvimux'
 
 " Autopairs for brackets
 Plug 'cohama/lexima.vim'
@@ -48,7 +63,7 @@ Plug 'cohama/lexima.vim'
 Plug 'tpope/vim-surround'
 
 " Dispatch tasks
-Plug 'tpope/vim-dispatch'
+" Plug 'tpope/vim-dispatch'
 
 " Easy replace occurences
 Plug 'svermeulen/vim-subversive'
@@ -56,11 +71,13 @@ Plug 'svermeulen/vim-subversive'
 " Easy resizing of windows
 Plug 'hsanson/vim-winmode'
 
+
 " Syntax-checker
 Plug 'w0rp/ale'
 
 " NERDTree
 " Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'Shougo/defx.nvim'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Easy commenting
@@ -75,22 +92,23 @@ Plug 'tpope/vim-unimpaired'
 " FZF for vim
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'liuchengxu/vim-clap'
 
 " Vim slash
 Plug 'junegunn/vim-slash'
 
 " Colorscheme
+Plug 'mhartington/oceanic-next'
 Plug 'flazz/vim-colorschemes'
 Plug 'lifepillar/vim-solarized8'
+Plug 'sickill/vim-monokai'
 Plug 'rakr/vim-one'
 
 " Tool for refactoring
 Plug 'dyng/ctrlsf.vim'
 
 " Plugin for Git
-" Plug 'lambdalisue/gina.vim'
-Plug 'tpope/vim-fugitive'
+Plug 'lambdalisue/gina.vim'
+" Plug 'tpope/vim-fugitive'
 Plug 'jreybert/vimagit'
 
 " Cool status bar
@@ -205,6 +223,8 @@ set cursorline
 set hidden
 set foldmethod=syntax
 set foldlevelstart=10
+" set foldlevel=10
+" set foldnestmax=1
 
 let javaScript_fold=1         " JavaScript
 set wrap
@@ -251,6 +271,7 @@ if has('persistent_undo')
   set undofile
 endif
 
+lua require('nvimux').bootstrap()
 """ Basics Keymaps
 
 " Turn off linewise keys. Normally, the `j' and `k' keys move the cursor down one entire line. with line wrapping on, this can cause the cursor to actually skip a few lines on the screen because it's moving from line N to line N+1 in the file. I want this to act more visually -- I want `down' to mean the next line on the screen
@@ -260,12 +281,12 @@ nmap k gk
 " Map Esc to jj combination
 imap jj <Esc>
 
-" Map C-d to C-j
-nmap <C-j> <C-d>
-nmap <C-k> <C-u>
-
 " Close window
 nnoremap <Leader>wd :close<CR>
+
+" Use TAB to switch buffer
+" nnoremap <Tab> :bn<CR>
+" nnoremap <S-Tab> :bp<CR>
 
 nnoremap [t :tabprev<CR>
 nnoremap ]t :tabnext<CR>
@@ -304,8 +325,9 @@ nmap <silent><Leader>tl :TestLast<CR>
 nmap <silent><Leader>. :TestLast<CR>
 nmap <silent><Leader>tg :TestVisit<CR>
 
-" tnoremap jj <C-\><C-n>
-tnoremap <Esc> <C-\><C-n>
+" Map C-j to C-C
+" I have Esc key remapped to Ctrl, so I need a way to cancel a set of mappings
+tnoremap jj <C-\><C-n>
 tnoremap <M-[> <C-\><C-n>
 
 " shortcuts for textobj block
@@ -316,12 +338,7 @@ omap q iq
 xmap c iw
 omap c iw
 
-" nnoremap <Leader>ga :Gina add %<CR>
-
-" Vim-dispatch
-nnoremap <Leader>dd :Dispatch!<CR>
-nnoremap <Leader>ds :Dispatch!<CR>
-nnoremap <Leader>df :Focus
+nnoremap <Leader>gA :Git add -A<CR>
 
 " vim-fugitive {
 " nnoremap <silent> <Leader>gs :Gstatus<CR>
@@ -340,12 +357,13 @@ nnoremap <silent> <Leader>gb :Gina blame<CR>
 nnoremap <silent> <Leader>gl :Gina log<CR>
 nnoremap <silent> <Leader>gp :Gina push<CR>
 
+" Mnemonic _i_nteractive
+nnoremap <silent> <Leader>ga :Git add -p %<CR>
 nnoremap <silent> <Leader>gg :SignifyToggle<CR>
+"}
 
 " Vimagit
 nnoremap <silent> <M-m> :Magit<CR>
-
-let g:discard_untracked_do_delete = 1
 
 " Edit .vimrc
 map <leader>vl :e! $MYVIMRC<CR>
@@ -407,20 +425,35 @@ nmap <Leader>j <Plug>(easymotion-bd-f)
 
 " NERDTree
 let g:NERDTreeHijackNetrw = 1
+" nnoremap <Leader>tf :NERDTreeFind<CR>
 nnoremap <Leader>tt :NERDTreeToggle<CR>
 
-" Vim clap mappings
-let g:clap_default_external_filters = "fzy"
+" FZF settings and mappings
+" Rg grep search
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --hidden --ignore-case --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
+  \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+  \   <bang>0)
 
-nnoremap e :Clap buffers<CR>
-nnoremap <Leader>o :Clap files ++finder=rg --files --hidden<CR>
-nnoremap <Leader>O :Clap files ++finder=rg --files --no-ignore<CR>
-nnoremap <Leader>pa :Clap grep ++query=<cword><CR>
-nnoremap <Leader>py :Clap yanks<CR>
-nnoremap <Leader>ph :Clap history<CR>
-nnoremap <Leader>ch :Clap command_history<CR>
-nnoremap <Leader>pc :Clap commits<CR>
-"
+" Rg grep search
+command! -bang -nargs=* RgNoIgnore
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --hidden -S --no-ignore-vcs --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
+  \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+  \   <bang>0)
+
+nnoremap <Leader>pa :Rg<CR>
+nnoremap <Leader>pA :RgNoIgnore<CR>
+nnoremap <Leader>pp :BLines<CR>
+nnoremap <Leader>o :GFiles --others --cached --exclude-standard<CR>
+nnoremap e :Buffers<CR>
+nnoremap <Leader>N :Snippets<CR>
+nnoremap <Leader>ph :History<CR>
+nnoremap <Leader>pt :Tags<CR>
+
 " Javascript
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_flow = 1
@@ -474,23 +507,24 @@ set signcolumn=yes
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ coc#refresh()
 
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-let g:coc_snippet_next = '<C-]>'
-
 " Use <c-space> for trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <C-x><C-o> to complete 'word', 'emoji' and 'include' sources
 imap <silent> <C-x><C-o> <Plug>(coc-complete-custom)
+
+" Use <cr> for confirm completion.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use `[c` and `]c` for navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
@@ -513,7 +547,7 @@ function! s:show_documentation()
   endif
 endfunction
 
-nmap ge :CocCommand explorer<CR>
+nmap ge :CocCommand explorer --width 20<CR>
 
 " Show signature help while editing
 autocmd CursorHoldI * silent! call CocActionAsync('showSignatureHelp')
