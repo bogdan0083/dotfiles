@@ -89,8 +89,8 @@ Plug 'rakr/vim-one'
 Plug 'dyng/ctrlsf.vim'
 
 " Plugin for Git
-" Plug 'lambdalisue/gina.vim'
-Plug 'tpope/vim-fugitive'
+Plug 'lambdalisue/gina.vim'
+" Plug 'tpope/vim-fugitive'
 Plug 'jreybert/vimagit'
 
 " Cool status bar
