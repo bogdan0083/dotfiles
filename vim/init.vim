@@ -347,7 +347,7 @@ nnoremap <silent> <Leader>gg :SignifyToggle<CR>
 " Vimagit
 nnoremap <silent> <M-m> :Magit<CR>
 
-let g:discard_untracked_do_delete = 1
+let g:magit_discard_untracked_do_delete = 1
 
 " Edit .vimrc
 map <leader>vl :e! $MYVIMRC<CR>
