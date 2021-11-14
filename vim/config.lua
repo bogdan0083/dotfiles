@@ -24,31 +24,36 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 lvim.keys.normal_mode["<C-j>"] = "<C-d>"
 lvim.keys.normal_mode["<C-k>"] = "<C-u>"
 lvim.keys.normal_mode["<leader>o"] = "<cmd>lua require('telescope.builtin').find_files()<cr>"
+lvim.keys.normal_mode["<leader>q"] = "<cmd>BufferWipeout<cr>"
 -- lvim.keys.normal_mode["e"] = "<cmd>lua require('telescope').extensions.frecency.frecency()<CR>"
 lvim.keys.normal_mode["<leader>S"] = "<cmd>lua require('telescope.builtin').grep_string({vimgrep_arguments = { 'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '--no-ignore' }})<cr>"
 lvim.keys.normal_mode["<leader>fb"] = "<cmd>lua require('telescope.builtin').file_browser()<cr>"
 lvim.keys.normal_mode["<leadera>O"] = "<cmd>lua require('telescope.builtin').find_files({search_dirs = {'/etc/', '/var/', '/home/bogdan0083/'} })<cr>"
 lvim.keys.normal_mode["<leader>ka"] = "<cmd>exe 1 . 'wincmd w'<cr>"
 lvim.keys.normal_mode["<leader>ks"] = "<cmd>exe 2 . 'wincmd w'<cr>"
-lvim.keys.normal_mode["<leader>kd"] = "<cmd>exe 3 . 'wincmd w'<cr>"
 lvim.keys.normal_mode["[b"] = "<cmd>:bnext<cr>"
+lvim.keys.normal_mode["<leader>kd"] = "<cmd>exe 3 . 'wincmd w'<cr>"
 lvim.keys.normal_mode["]b"] = "<cmd>:bprev<cr>"
 lvim.keys.normal_mode["//"] = "<cmd>:nohl<cr>"
+vim.api.nvim_set_keymap('n', '<leader>j', '<Plug>Lightspeed_s', {})
+vim.api.nvim_set_keymap('n', '<leader>J', '<Plug>Lightspeed_S', {})
 
 lvim.keys.normal_mode["e"] = "<cmd>lua require('telescope.builtin').buffers({ sort_lastused = true, ignore_current_buffer = true })<cr>"
 
 require('telescope').load_extension('fzf')
-
 -- unmap a default keymapping
+
 -- lvim.keys.normal_mode["<C-Up>"] = ""
 -- edit a default keymapping
 lvim.keys.normal_mode["<C-q>"] = ":q<cr>"
 
 vim.cmd([[
   imap jf <Plug>(emmet-expand-abbr)
+  imap jj <Esc>
   
   tnoremap <Esc> <C-\><C-n>
   tnoremap <M-[> <C-\><C-n>
+  nmap <C-;> <Plug>Lightspeed_s
 
   set clipboard=unnamedplus
 
@@ -168,6 +173,24 @@ ls.snippets = {
         i(0), t({"", ""}),
       t("}")
     }),
+  },
+  php = {
+    s("ph", {
+      t({"<?php "}), i(0), t({" ?>"})
+    }),
+    s("phe", {
+      t({"<?php echo "}), i(0), t({" ?>"})
+    }),
+    s("phpwhil", {
+      t({"<?php while( "}), i(1), t({" ): ?>", "\t"}),
+      i(0), t({ "", "" }),
+      t({"<?php endwhile; ?>"})
+    }),
+    s("phpif", {
+      t({"<?php if( "}), i(1), t({" ): ?>", "\t"}),
+      i(0), t({ "", "" }),
+      t({"<?php endif; ?>"})
+    }),
   }
 }
 
@@ -259,6 +282,7 @@ lvim.plugins = {
     {'wellle/targets.vim'},
     {'tpope/vim-surround'},
     {'dstein64/nvim-scrollview'},
+    { "ggandor/lightspeed.nvim", event = "BufRead" },
     -- { "nvim-telescope/telescope-frecency.nvim",
     --   config = function()
     --     require"telescope".load_extension("frecency")
