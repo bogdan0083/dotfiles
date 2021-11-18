@@ -31,12 +31,14 @@ lvim.keys.normal_mode["<leader>fb"] = "<cmd>lua require('telescope.builtin').fil
 lvim.keys.normal_mode["<leadera>O"] = "<cmd>lua require('telescope.builtin').find_files({search_dirs = {'/etc/', '/var/', '/home/bogdan0083/'} })<cr>"
 lvim.keys.normal_mode["<leader>ka"] = "<cmd>exe 1 . 'wincmd w'<cr>"
 lvim.keys.normal_mode["<leader>ks"] = "<cmd>exe 2 . 'wincmd w'<cr>"
-lvim.keys.normal_mode["[b"] = "<cmd>:bnext<cr>"
+lvim.keys.normal_mode["]b"] = "<cmd>:bnext<cr>"
 lvim.keys.normal_mode["<leader>kd"] = "<cmd>exe 3 . 'wincmd w'<cr>"
-lvim.keys.normal_mode["]b"] = "<cmd>:bprev<cr>"
+lvim.keys.normal_mode["<leader>Q"] = "<S-Insert>"
+lvim.keys.normal_mode["<leader>tt"] = "<cmd>ToggleTerm direction='horizontal'<cr>"
+lvim.keys.normal_mode["[b"] = "<cmd>:bprev<cr>"
 lvim.keys.normal_mode["//"] = "<cmd>:nohl<cr>"
-vim.api.nvim_set_keymap('n', '<leader>j', '<Plug>Lightspeed_s', {})
-vim.api.nvim_set_keymap('n', '<leader>J', '<Plug>Lightspeed_S', {})
+vim.api.nvim_set_keymap('n', 'z', '<Plug>Lightspeed_s', {})
+vim.api.nvim_set_keymap('n', 'Z', '<Plug>Lightspeed_S', {})
 
 lvim.keys.normal_mode["e"] = "<cmd>lua require('telescope.builtin').buffers({ sort_lastused = true, ignore_current_buffer = true })<cr>"
 
@@ -44,13 +46,17 @@ require('telescope').load_extension('fzf')
 -- unmap a default keymapping
 
 -- lvim.keys.normal_mode["<C-Up>"] = ""
+
 -- edit a default keymapping
+
 lvim.keys.normal_mode["<C-q>"] = ":q<cr>"
 
 vim.cmd([[
   imap jf <Plug>(emmet-expand-abbr)
   imap jj <Esc>
-  
+
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+
   tnoremap <Esc> <C-\><C-n>
   tnoremap <M-[> <C-\><C-n>
   nmap <C-;> <Plug>Lightspeed_s
@@ -283,11 +289,23 @@ lvim.plugins = {
     {'tpope/vim-surround'},
     {'dstein64/nvim-scrollview'},
     { "ggandor/lightspeed.nvim", event = "BufRead" },
-    -- { "nvim-telescope/telescope-frecency.nvim",
-    --   config = function()
-    --     require"telescope".load_extension("frecency")
-    --   end,
-    --   requires = {"tami5/sqlite.lua"} },
+    { "mg979/vim-visual-multi" },
+    { "tpope/vim-fugitive" },
+    { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' },
+    {
+    "norcalli/nvim-colorizer.lua",
+      config = function()
+        require("colorizer").setup({ "*" }, {
+            RGB = true, -- #RGB hex codes
+            RRGGBB = true, -- #RRGGBB hex codes
+            RRGGBBAA = true, -- #RRGGBBAA hex codes
+            rgb_fn = true, -- CSS rgb() and rgba() functions
+            hsl_fn = true, -- CSS hsl() and hsla() functions
+            css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+            css_fn = true, -- Enable all CSS *functions*: rgb_fn, hsl_fn
+            })
+      end,
+  },
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
