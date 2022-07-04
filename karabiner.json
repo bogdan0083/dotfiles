@@ -241,6 +241,37 @@
                             },
                             {
                                 "from": {
+                                    "key_code": "z"
+                                },
+                                "parameters": { "basic.to_if_held_down_threshold_milliseconds": 50 },
+                                "to": [
+                                    {
+                                        "key_code": "z"
+                                    },
+                                    {
+                                        "pointing_button": "button1"
+                                    }
+                                ],
+                                "to_if_held_down": [ 
+                                    {
+                                        "key_code": "z"
+                                    },
+                                    {
+                                        "pointing_button": "button1"
+                                    }
+                                ],
+                                "conditions": [
+                                        {
+                                          "type": "frontmost_application_if",
+                                          "bundle_identifiers": [
+                                            "^com\\.adobe\\.Photoshop$"
+                                          ]
+                                        }
+                                ],
+                                "type": "basic"
+                            }
+                            {
+                                "from": {
                                     "key_code": "c"
                                 },
                                 "to": [
