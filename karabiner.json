@@ -218,6 +218,17 @@
                         ]
                     },
                     {
+                        "description": "Control as scroll when hold",
+                        "type": "mouse_motion_to_scroll",
+                        "from": {
+                            "modifiers": {
+                                "mandatory": [
+                                    ["left_command"]
+                                ]
+                            }
+                        }
+                    },
+                    {
                         "description": "Photoshop",
                         "manipulators": [
                             {
@@ -238,52 +249,78 @@
                                         }
                                 ],
                                 "type": "basic"
-                            },
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Figma",
+                        "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "z"
+                                    "key_code": "x"
                                 },
-                                "parameters": { "basic.to_if_held_down_threshold_milliseconds": 50 },
                                 "to": [
                                     {
-                                        "key_code": "z"
-                                    },
-                                    {
-                                        "pointing_button": "button1"
-                                    }
-                                ],
-                                "to_if_held_down": [ 
-                                    {
-                                        "key_code": "z"
-                                    },
-                                    {
-                                        "pointing_button": "button1"
+                                        "key_code": "h"
                                     }
                                 ],
                                 "conditions": [
                                         {
                                           "type": "frontmost_application_if",
                                           "bundle_identifiers": [
-                                            "^com\\.adobe\\.Photoshop$"
+                                            "^com\\.figma\\.Desktop$"
                                           ]
                                         }
                                 ],
                                 "type": "basic"
-                            }
+                            },
                             {
                                 "from": {
-                                    "key_code": "c"
+                                    "key_code": "f"
                                 },
                                 "to": [
                                     {
-                                        "key_code": "c"
+                                        "key_code": "left_command",
+                                    },
+                                    {
+                                        "mouse_key": {
+                                            "vertical_wheel": 32,
+                                        },
+                                        "modifiers": [
+                                            "left_command"
+                                        ],
+                                        "repeat": true
                                     }
                                 ],
                                 "conditions": [
                                         {
                                           "type": "frontmost_application_if",
                                           "bundle_identifiers": [
-                                            "^com\\.adobe\\.Photoshop$"
+                                            "^com\\.figma\\.Desktop$"
+                                          ]
+                                        }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "d"
+                                },
+                                "to": [
+                                    {
+                                        "mouse_key": {
+                                            "vertical_wheel": -32,
+                                        },
+                                        "modifiers": [
+                                            "left_command"
+                                        ]
+                                    }
+                                ],
+                                "conditions": [
+                                        {
+                                          "type": "frontmost_application_if",
+                                          "bundle_identifiers": [
+                                            "^com\\.figma\\.Desktop$"
                                           ]
                                         }
                                 ],
